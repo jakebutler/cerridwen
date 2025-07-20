@@ -1,0 +1,2425 @@
+This project uses the following tools:
+Frontend - TailwindCSS
+Backend - Ruby on Rails (API mode)
+Auth - Devise or Sorcery
+AI Agent - Active Agent
+Deployment - Fly.io
+Rules Source -ai-rules-database
+Markdown Editor - TipTap or SimpleMDE (optional)
+File Upload - Active Storage or Uppy
+
+Here are some rules for this project:
+# Deployment and DevOps Standards for Fly.io
+
+This document outlines the deployment and DevOps standards for building and operating applications on Fly.io. It's designed to provide clear guidance for developers and inform AI coding assistants, ensuring maintainable, performant, and secure applications. The examples are provided based on the current understanding of Fly.io and should always be verified against the latest official documentation.
+
+## 1. Build Processes and CI/CD
+
+### 1.1. Standard: Utilize Docker for Reproducible Builds
+
+*   **Do This:** Define your application's environment using a "Dockerfile". This ensures a consistent build environment across development, staging, and production.
+
+*   **Don't Do This:** Rely on system-level dependencies or manually installed packages during deployment. This leads to inconsistent behavior and difficult debugging.
+
+*   **Why:** Docker provides isolation and reproducibility, eliminating the "it works on my machine" problem.
+
+*   **Example "Dockerfile":**
+
+    """dockerfile
+    # Use an official Node.js runtime as a parent image
+    FROM node:18-alpine
+
+    # Set the working directory in the container
+    WORKDIR /app
+
+    # Copy package.json and package-lock.json to the working directory
+    COPY package*.json ./
+
+    # Install application dependencies
+    RUN npm install
+
+    # Copy the application source code to the working directory
+    COPY . .
+
+    # Expose the port the app runs on
+    EXPOSE 3000
+
+    # Define the command to start the application
+    CMD [ "npm", "start" ]
+    """
+
+*   **Anti-Pattern:** Using a base image that's excessively large or contains unnecessary dependencies bloats the image size and increases deployment time. Prefer slim or alpine-based images when possible.
+
+### 1.2 Fly.io & GitHub Actions Integration
+
+* **Do This:** Use GitHub Actions for continuous integration and deployment. Integrate your workflow with Fly.io using the "flyctl" CLI.
+
+* **Don't Do This:** Manually deploy applications or rely on ad-hoc deployment scripts. CI/CD automates the process and reduces the risk of human error.
+
+* **Why:** Automating deployments improves speed, consistency, and reliability.
+
+*   **Example ".github/workflows/deploy.yml":**
+
+    """yaml
+    name: Fly.io Deploy
+
+    on:
+      push:
+        branches:
+          - main
+
+    jobs:
+      deploy:
+        name: Deploy app
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v3
+          - name: Install flyctl
+            run: curl -L https://fly.io/install.sh | sh
+          - name: Set Flyctl environment variables
+            env:
+              FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          - name: Deploy to Fly.io
+            run: flyctl deploy --remote-only
+    """
+  * **Considerations:**
+      * Store "FLY_API_TOKEN" in GitHub Secrets.
+      * "--remote-only" builds your app on Fly.io's builders, great for performance.
+      * Include tests in your workflow.  Fail the deploy if tests fail.
+      * Consider using semantic versioning and tagging your releases.
+
+
+### 1.3. Standard: Version Control "fly.toml"
+
+*   **Do This:** Commit your "fly.toml" file to your repository. This file defines your Fly.io application configuration, including regions, services, and environment variables.
+
+*   **Don't Do This:** Exclude "fly.toml" from version control or manually edit it on the Fly.io platform.
+
+*   **Why:** Version control ensures that your application configuration is tracked, auditable, and reproducible.
+
+*   **Example "fly.toml":**
+
+    """toml
+    app = "your-app-name"
+    primary_region = "iad"
+
+    [build]
+      builder = "paketobuildpacks/builder:base"
+
+    [http_service]
+      internal_port = 3000
+      force_https = true
+      auto_stop_machines = true
+      auto_start_machines = true
+      min_machines_running = 1
+
+    [[vm]]
+      cpu_kind = "shared"
+      cpus = 1
+      memory_mb = 512
+    """
+
+*   **Anti-Pattern:** Storing sensitive information like API keys directly in "fly.toml". Use Fly.io secrets instead (see section 3).
+
+### 1.4. Standard: Leverage Multi-Stage Builds for Smaller Images
+
+*   **Do This:**  Use multi-stage Docker builds to separate build-time dependencies from runtime dependencies.  This significantly reduces the size of your final Docker image.
+
+*   **Don't Do This:** Include development tools and build dependencies in your production image.
+
+*   **Why:** Smaller images deploy faster and consume less bandwidth.
+
+*   **Example Multi-Stage "Dockerfile" (Node.js):**
+
+    """dockerfile
+    # Build stage
+    FROM node:18-alpine AS builder
+    WORKDIR /app
+    COPY package*.json ./
+    RUN npm install
+    COPY . .
+    RUN npm run build # Assuming you have a build script
+
+    # Production stage
+    FROM node:18-alpine
+    WORKDIR /app
+    COPY package*.json ./
+    RUN npm install --production
+    COPY --from=builder /app/dist ./dist # Copy only the built artifacts
+    EXPOSE 3000
+    CMD [ "npm", "start" ]
+    """
+
+### 1.5 Standard: Health Checks
+
+*   **Do This:** Implement health checks that Fly.io can use to monitor the health of your application instances.  These should check critical dependencies (database connections, etc.).
+
+*   **Don't Do This:** Rely only on simple ping-based health checks. These don't actually verify if your application is functioning correctly.
+
+*   **Why:** Health checks allow Fly.io to automatically restart failing instances, improving the availability and reliability of your application.
+
+*   **Example Health Check Configuration in "fly.toml":**
+
+    """toml
+    [http_service]
+      internal_port = 3000
+      force_https = true
+      auto_stop_machines = true
+      auto_start_machines = true
+      min_machines_running = 1
+      [http_service.checks]
+        path = "/healthcheck"
+        interval = "10s"
+        timeout = "5s"
+        grace_period = "5s"
+        method = "GET"
+    """
+
+*   **Example "/healthcheck" endpoint (Node.js/Express):**
+
+    """javascript
+    app.get('/healthcheck', async (req, res) => {
+      try {
+        // Check database connection
+        await sequelize.authenticate();
+        // Add other critical health checks here
+        res.status(200).send('OK');
+      } catch (error) {
+        console.error('Health check failed:', error);
+        res.status(503).send('Service Unavailable');
+      }
+    });
+    """
+
+### 1.6 Automate Database Migrations.
+
+*   **Do This:**: Integrate database migrations with your deployment process. Tools like Flyway, Alembic or Knex are beneficial for tracking and applying schema changes.
+*   **Why:** Avoid manual database updates that are prone to errors and inconsistencies.
+*   **Example:** Use a post deploy hook in your GitHub actions:
+
+"""yaml
+    name: Fly.io Deploy
+
+    on:
+      push:
+        branches:
+          - main
+
+    jobs:
+      deploy:
+        name: Deploy app
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v3
+          - name: Install flyctl
+            run: curl -L https://fly.io/install.sh | sh
+          - name: Set Flyctl environment variables
+            env:
+              FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          - name: Deploy to Fly.io
+            run: flyctl deploy --remote-only
+
+          - name: Run Database Migrations if deployment succeeds
+            run: flyctl ssh console -a <your-app-name> -C "node ./scripts/migrate.js"
+"""
+
+## 2. Production Considerations
+
+### 2.1. Standard: Configure autoscaling
+
+*   **Do This:**: Set autoscaling configuration in "fly.toml" to automatically increase or decrease the number of instances depending on CPU, memory, or request queue lengths.
+
+*   **Why:** Dynamically adjusting instance counts based on demand is essential for maintaining performance during peak load times while minimizing costs during idle periods
+*   **Example:** Set autoscaling configuration.
+
+"""toml
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 25
+    soft_limit = 20
+
+"""
+
+### 2.2. Standard: Centralized Logging
+
+*   **Do This:** Configure your application to send logs to a centralized logging system like Grafana Loki, ELK Stack (Elasticsearch, Logstash, Kibana), or Datadog.  Use structured logging (e.g., JSON) to make logs easier to query and analyze.
+
+*   **Don't Do This:** Rely solely on "flyctl logs" for production monitoring. This is insufficient for debugging complex issues or analyzing trends.
+
+*   **Why:** Centralized logging provides a single source of truth for application logs, simplifying troubleshooting and performance analysis.
+
+*   **Example (Node.js with Winston and Loki):**
+
+    """javascript
+    const winston = require('winston');
+    const LokiTransport = require('winston-loki');
+
+    const options = {
+      transports: [
+        new winston.transports.Console(),
+        new LokiTransport({
+          host: 'http://your-loki-instance:3100',  // Replace with your Loki URL
+          labels: { app: 'your-app-name' },
+          json: true,
+          format: winston.format.json()
+        }),
+      ],
+    };
+
+    const logger = winston.createLogger(options);
+
+    logger.info('Application started');
+    logger.error('Something went wrong', { error: new Error('Test Error') });
+    """
+
+### 2.3. Standard: Monitoring and Alerting
+
+*   **Do This:** Implement comprehensive monitoring of your application's performance and health using tools like Prometheus, Grafana, or Datadog. Set up alerts for critical metrics such as error rates, latency, and resource utilization.
+
+*   **Don't Do This:** Ignore monitoring or rely on manual checks for detecting issues. Proactive monitoring allows you to identify and resolve problems before they impact users.
+
+*   **Why:** Monitoring and alerting provide visibility into your application's behavior and enable you to respond quickly to incidents.
+
+### 2.4. Standard: Use Fly.io Secrets for Sensitive Data
+
+*   **Do This:** Store sensitive information such as API keys, database passwords, and encryption keys using Fly.io secrets. Access these secrets as environment variables within your application.
+
+*   **Don't Do This:** Hardcode secrets in your code or store them in configuration files that are committed to version control.
+
+*   **Why:** Fly.io secrets are securely stored and managed, preventing unauthorized access to sensitive data.
+
+*   **Example:**
+
+    """bash
+    flyctl secrets set DATABASE_PASSWORD=your_database_password
+    """
+
+    In your application code:
+
+    """javascript
+    const databasePassword = process.env.DATABASE_PASSWORD;
+    """
+
+### 2.5. Standard: Graceful Shutdowns
+
+*   **Do This:** Implement graceful shutdown handling in your application to ensure that in-flight requests are completed and resources are released before the application terminates. This is especially important in a distributed environment like Fly.io.
+
+*   **Don't Do This:** Allow your application to terminate abruptly, potentially leading to data loss or incomplete operations.
+
+*   **Why:** Graceful shutdowns improve the reliability and data integrity of your application.
+
+*   **Example (Node.js):**
+
+    """javascript
+    process.on('SIGTERM', () => {
+      console.log('Received SIGTERM, shutting down gracefully...');
+      // Close database connections, release resources, etc.
+      server.close(() => {
+        console.log('Server closed');
+        process.exit(0);
+      });
+      setTimeout(() => {
+          console.error("Could not close connections in time, forcefully shutting down");
+          process.exit(1);
+      }, 30*1000);
+    });
+    """
+
+### 2.6. Standard: Geo-Local Latency Reduction
+
+*   **Do This:** Deploy Application to multiple regions for reduced latency.
+*   **Why:** A global deployment with optimized regions reduces latency for end-users
+*   **Example:**
+    """toml
+    app = "your-app-name"
+    primary_region = "iad"
+    console_command = "/rails/bin/rails console"
+
+    [build]
+      builtin = "rails"
+
+    [deploy]
+      release_command = "/rails/bin/rails fly:release"
+      strategy = "rolling"
+
+    [[services]]
+      internal_port = 3000
+      processes = ["app"]
+      protocol = "tcp"
+
+      [services.concurrency]
+        hard_limit = 25
+        soft_limit = 20
+        type = "requests"
+
+      [[services.ports]]
+        handlers = ["http"]
+        port = 80
+
+      [[services.ports]]
+        handlers = ["tls", "http"]
+        port = 443
+
+    [experimental]
+      allowed_public_cidrs = []
+
+    regions = ["iad", "ord", "lhr", "syd"] #Deploy to multiple regions.
+    """
+
+## 3. Security Best Practices
+
+### 3.1. Standard: Principle of Least Privilege
+
+*   **Do This:** Grant your application only the minimum necessary permissions required to perform its tasks. This applies to both system-level permissions and access to external resources.
+
+*   **Don't Do This:** Run your application with root privileges or grant it unnecessary access to sensitive data.
+
+*   **Why:** Limiting permissions reduces the potential impact of security vulnerabilities.
+
+### 3.2. Standard: Regularly Update Dependencies
+
+*   **Do This:** Keep your application's dependencies up to date with the latest security patches. Use tools like "npm audit", "yarn audit", or "Dependabot" to identify and address vulnerabilities.
+
+*   **Don't Do This:** Ignore security updates or delay patching vulnerabilities.
+
+*   **Why:** Outdated dependencies are a common source of security vulnerabilities. Update regularly. Use automated tools to remind and apply the patches.
+
+### 3.3. Standard: Input Validation and Output Encoding
+
+*   **Do This:** Validate all user input to prevent injection attacks. Encode output to protect against cross-site scripting (XSS) vulnerabilities.
+
+*   **Don't Do This:** Trust user input or directly use it in database queries or HTML output.
+
+*   **Why:** Input validation and output encoding are essential for protecting against common web security vulnerabilities.
+
+### 3.4. Standard: Secure Communication (HTTPS)
+
+*   **Do This:** Ensure that all communication between your application and clients is encrypted using HTTPS. Fly.io automatically provides TLS certificates for your applications.
+
+*   **Don't Do This:** Allow unencrypted HTTP traffic.
+
+*   **Why:** HTTPS protects data in transit from eavesdropping and tampering. Enable "force_https" in "fly.toml"
+
+These coding standards will guide developers and assist AI tools to produce high-quality, maintainable, and secure applications on Fly.io. Remember to consult the official Fly.io documentation for the most up-to-date information and best practices.
+
+# API Integration Standards for Ruby
+
+This document outlines the standards and best practices for integrating with backend services and external APIs in Ruby projects. It focuses on modern approaches, maintainability, performance, and security, tailored for the latest Ruby version.
+
+## 1. Architectural Considerations
+
+### 1.1 Centralized API Client Logic
+
+**Standard:** Encapsulate API interaction logic within dedicated modules or classes. Avoid scattering API calls throughout the application.
+
+**Do This:**
+
+"""ruby
+# app/lib/external_api/user_service.rb
+module ExternalApi
+  class UserService
+    BASE_URL = 'https://external-api.com'.freeze
+
+    def self.fetch_user(user_id)
+      response = HTTParty.get("#{BASE_URL}/users/#{user_id}")
+      raise "API Error: #{response.code}" unless response.success?
+      JSON.parse(response.body)
+    rescue => e
+      Rails.logger.error("Error fetching user: #{e.message}")
+      nil
+    end
+
+    def self.create_user(user_data)
+      response = HTTParty.post("#{BASE_URL}/users", body: user_data.to_json, headers: { 'Content-Type' => 'application/json' })
+      raise "API Error: #{response.code}" unless response.success?
+      JSON.parse(response.body)
+    rescue => e
+      Rails.logger.error("Error creating user: #{e.message}")
+      nil
+    end
+  end
+end
+
+# Usage:
+user = ExternalApi::UserService.fetch_user(123)
+if user
+  puts "User: #{user['name']}"
+else
+  puts "Failed to fetch user."
+end
+
+
+new_user_data = { name: "John Doe", email: "john.doe@example.com" }
+created_user = ExternalApi::UserService.create_user(new_user_data)
+
+if created_user
+  puts "New user ID: #{created_user['id']}"
+else
+  puts "Failed to create user."
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid scattering API calls directly in controllers or models
+
+# Bad example: directly calling API from controller
+class UsersController < ApplicationController
+  def show
+    response = HTTParty.get("https://external-api.com/users/#{params[:id]}")
+    @user = JSON.parse(response.body) # fragile to changes.
+    render 'show'
+  rescue => e
+    flash[:error] = "Failed to fetch user: #{e.message}"
+    redirect_to root_path
+  end
+end
+"""
+
+**Why:**
+*   **Maintainability:** Centralizing API logic makes it easier to update API endpoints, authentication methods, and error handling across the application.
+*   **Testability:** Facilitates unit testing of API interaction logic without needing to mock external services throughout the codebase.
+*   **Readability:** Isolates complex API interaction logic, making controllers and models cleaner and more focused on their respective responsibilities.
+
+### 1.2  Abstracting the Client Interaction via Adapters
+
+**Standard:**  Create Adapters to abstract interaction with external API clients.  These Adapters should use common interfaces that are part of your application domain, to avoid tightly coupling with external API response structures.
+
+**Do This:**
+
+"""ruby
+# app/adapters/user_adapter.rb
+module Adapters
+  class UserAdapter
+    def self.fetch_user(user_id)
+      api_response = ExternalApi::UserService.fetch_user(user_id)
+      return nil unless api_response
+      build_user(api_response)
+    end
+
+    def self.create_user(user_data)
+      api_response = ExternalApi::UserService.create_user(user_data)
+      return nil unless api_response
+      build_user(api_response)
+    end
+
+    private
+
+    def self.build_user(api_response)
+      # Map the external API response to internal data structures (e.g., a User object)
+      {
+        id: api_response['id'],
+        name: api_response['name'],
+        email: api_response['email']
+      }
+    end
+  end
+end
+
+# Usage
+user = Adapters::UserAdapter.fetch_user(123)
+
+if user
+  puts "User Name: #{user[:name]}"
+else
+  puts "Could not fetch user"
+end
+
+new_user_data = { name: "Jane Doe", email: "jane.doe@example.com" }
+created_user = Adapters::UserAdapter.create_user(new_user_data)
+
+if created_user
+  puts "Created User ID: #{created_user[:id]}"
+else
+  puts "Could not create user."
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid directly using the external API response everywhere in the application.
+# This locks your implementation to the external naming, which can change in the future.
+class UsersController < ApplicationController
+  def show
+    user = Adapters::UserAdapter.fetch_user(params[:id]) #Still using adapter correctly but...
+
+    if user
+      @user_name = user[:name] # Directly accessing external User's name
+      @user_email = user[:email] # Directly accessing external User's email
+      render 'show'
+    else
+      flash[:error] = "Failed to fetch user"
+      redirect_to root_path
+    end
+  end
+end
+"""
+
+**Why:**
+
+*   **Decoupling:** Insulates the application from direct dependence on the external API schema. Any changes in the external API only require modifying the adapter, not the entire application.
+*   **Flexibility:** Simplifies the process of switching to a different API provider or version in the future.
+*   **Data Transformation:** Provides a centralized location for transforming external API data into a format that aligns with the application's internal data models.
+
+### 1.3 Asynchronous API Interactions
+
+**Standard:** Use asynchronous processing for long-running or non-critical API calls to avoid blocking the main application thread and improve responsiveness.
+
+**Do This:**
+
+"""ruby
+# Using ActiveJob for asynchronous processing
+# app/jobs/process_user_creation_job.rb
+class ProcessUserCreationJob < ApplicationJob
+  queue_as :default
+
+  def perform(user_data)
+    Adapters::UserAdapter.create_user(user_data) # API Interaction happens here. Log/retry in this job
+    Rails.logger.info("User created asynchronously: #{user_data[:email]}")
+  rescue => e
+    Rails.logger.error("Error creating user asynchronously: #{e.message}")
+    # Optionally, retry the job or notify administrators
+    retry_job(wait: 5.minutes) if attempts < 5 #Example retries
+  end
+end
+
+# In your controller or service:
+new_user_data = { name: "Async User", email: "async.user@example.com" }
+ProcessUserCreationJob.perform_later(new_user_data) # Enqueue job
+puts "User creation initiated asynchronously."
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid making synchronous API calls in critical request paths
+class UsersController < ApplicationController
+  def create
+    user_data = params.require(:user).permit(:name, :email)
+    user = Adapters::UserAdapter.create_user(user_data) # Synchronous and blocking, can cause performance issues
+    if user
+      redirect_to user_path(user[:id]), notice: 'User created successfully.'
+    else
+      flash[:error] = "Failed to create user"
+      render :new
+    end
+  end
+end
+"""
+
+**Why:**
+
+*   **Performance:** Prevents API calls from blocking the user interface or application workers.
+*   **Scalability:** Allows the application to handle more concurrent requests by offloading API processing to background jobs.
+*   **Resilience:** Enables retries or alternative processing strategies in case of API failures without directly impacting the user experience.
+
+## 2. Implementation Details
+
+### 2.1 HTTP Client Libraries
+
+**Standard:** Use a robust and well-maintained HTTP client library like "httparty", "faraday", or Ruby's built-in "Net::HTTP" for making API requests. "Faraday" is generally preferred for its flexibility and middleware support.
+
+**Do This (Faraday):**
+
+"""ruby
+require 'faraday'
+require 'json'
+
+module ExternalApi
+  class ApiClient
+    def self.make_request(method, path, body: nil, params: nil, headers: {})
+      connection = Faraday.new(url: 'https://external-api.com') do |faraday|
+        faraday.request  :json                     # Encode request bodies as JSON
+        faraday.response :json, content_type: /\bjson$/ # Parse JSON responses
+        faraday.adapter  Faraday.default_adapter  # Use the default Net::HTTP adapter
+        # Optional middleware for logging, retries, etc.
+      end
+
+      response = connection.public_send(method, path, body, headers)
+
+      unless response.success?
+        Rails.logger.error("API Error: #{response.status} - #{response.body}")
+        raise "API Error: #{response.status}"
+      end
+
+      response.body
+    rescue Faraday::Error => e
+      Rails.logger.error("Faraday Error: #{e.message}")
+      nil
+    end
+  end
+end
+
+# Usage
+user = ExternalApi::ApiClient.make_request(:get, "/users/123")
+puts user.inspect
+
+new_user_data = { name: "Faraday User", email: "faraday.user@example.com" }
+created_user = ExternalApi::ApiClient.make_request(:post, "/users", body: new_user_data)
+puts created_user.inspect
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid manual socket handling or overly complex implementations
+require 'net/http'
+require 'uri'
+require 'json'
+
+# Example of overly complex manual request building
+
+def fetch_user(user_id)
+  uri = URI("https://external-api.com/users/#{user_id}")
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true # Ensure SSL is used
+  request = Net::HTTP::Get.new(uri.path)
+  response = http.request(request)
+
+  if response.is_a?(Net::HTTPSuccess)
+    JSON.parse(response.body)
+  else
+    puts "Error: #{response.code} - #{response.message}"
+    nil
+  end
+rescue => e
+  puts "Exception: #{e.message}"
+  nil
+end
+
+user = fetch_user(123)
+puts user.inspect
+"""
+
+**Why:**
+
+*   **Abstraction:** Handles low-level details of HTTP requests, simplifying the API interaction logic.
+*   **Features:** Provides built-in support for features like request encoding, response parsing, timeouts, retries, and middleware.
+*   **Security:** Offers secure HTTPS connections and protection against common vulnerabilities.
+
+### 2.2 Data Serialization/Deserialization
+
+**Standard:** Use "JSON.parse" and "JSON.generate" (or corresponding methods in your chosen library) to serialize and deserialize data to/from JSON format. Ensure the data conforms to the API's expected structure.
+
+**Do This:**
+
+"""ruby
+require 'json'
+
+user_data = { name: "Serialized User", email: "serialized.user@example.com" }
+json_data = JSON.generate(user_data)
+
+puts json_data # Output: {"name":"Serialized User","email":"serialized.user@example.com"}
+
+parsed_data = JSON.parse(json_data)
+puts parsed_data['name'] # Output: Serialized User
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid manual string concatenation for building JSON payloads or parsing responses
+user_data = { name: "Concatenated User", email: "concatenated.user@example.com" }
+
+# Terrible Practice
+json_payload = "{ \"name\": \"" + user_data[:name] + "\", \"email\": \"" + user_data[:email] + "\" }"
+puts json_payload
+"""
+
+**Why:**
+
+*   **Correctness:** Ensures data is properly formatted and encoded for transmission over the network.
+*   **Security:** Prevents injection vulnerabilities by properly escaping and sanitizing data.
+*   **Efficiency:** Optimized for performance, especially when handling large datasets.
+
+### 2.3 Error Handling
+
+**Standard:** Implement robust error handling to gracefully manage API failures. Use "begin...rescue" blocks to catch exceptions, log errors, and provide informative feedback to the user or application.
+
+**Do This:**
+
+"""ruby
+module ExternalApi
+  class UserService
+    def self.fetch_user(user_id)
+      response = HTTParty.get("https://external-api.com/users/#{user_id}")
+      raise "API Error: #{response.code}" unless response.success?
+      JSON.parse(response.body)
+    rescue => e
+      Rails.logger.error("Error fetching user: #{e.message}")
+      # Handle the error gracefully, e.g., return a default value or re-raise a custom exception
+      nil
+    end
+  end
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Example of swallowing errors without proper handling
+# This can lead to silent failures and hard-to-debug issues
+def fetch_user(user_id)
+  begin
+    response = HTTParty.get("https://external-api.com/users/#{user_id}")
+    JSON.parse(response.body)
+  rescue => e
+    # Swallowing the exception.  BAD!
+    nil
+  end
+end
+"""
+
+**Why:**
+
+*   **Reliability:** Prevents API failures from crashing the application or corrupting data.
+*   **Debuggability:** Provides detailed error messages and stack traces to help diagnose and resolve issues.
+*   **User Experience:** Ensures users receive informative feedback when API calls fail, preventing confusion and frustration.
+
+### 2.4 Authentication and Authorization
+
+**Standard:** Use secure authentication and authorization mechanisms when interacting with APIs that require it. Store API keys and credentials securely using environment variables, encrypted configuration files, or dedicated secrets management services, and use HTTPS when communicating with those services.
+
+**Do This:**
+
+"""ruby
+# lib/external_api/secure_api.rb
+module ExternalApi
+  class SecureApi
+    API_KEY = ENV['EXTERNAL_API_KEY'] # Store API Key in ENV
+
+    def self.fetch_data(resource)
+      response = HTTParty.get("https://secure-api.com/#{resource}", headers: { 'X-API-Key' => API_KEY })
+      raise "API Error: #{response.code}" unless response.success?
+      JSON.parse(response.body)
+    rescue => e
+      Rails.logger.error("Error fetching secure data: #{e.message}")
+      nil
+    end
+  end
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid hardcoding API keys or credentials directly in source code
+def fetch_data(resource)
+  api_key = "YOUR_API_KEY" # Hardcoded API Ket.  DANGER!
+  response = HTTParty.get("https://secure-api.com/#{resource}", headers: { 'X-API-Key' => api_key })
+  JSON.parse(response.body)
+rescue => e
+  puts "Error: #{e.message}"
+  nil
+end
+"""
+
+**Why:**
+
+*   **Security:** Protects sensitive data and prevents unauthorized access to resources.
+*   **Compliance:** Meets industry best practices and regulatory requirements for data protection.
+*   **Maintainability:** Simplifies credential management and reduces the risk of accidentally exposing secrets.
+
+### 2.5 Rate Limiting and Throttling
+
+**Standard:** Respect API rate limits and implement throttling mechanisms to prevent overloading external services. Use caching or queues to manage API requests and avoid exceeding rate limits.
+
+**Do This:**
+
+"""ruby
+# Using a simple rate limiter with Redis
+require 'redis'
+
+module ExternalApi
+  class RateLimitedApi
+    RATE_LIMIT = 10 # requests per minute
+    REDIS = Redis.new
+
+    def self.fetch_data(resource)
+      key = "api_rate_limit:#{Time.now.to_i / 60}" # Key for the current minute
+      count = REDIS.incr(key)
+      REDIS.expire(key, 60) unless REDIS.ttl(key) > -1 # Expire the key after 60 seconds
+
+
+      if count > RATE_LIMIT
+        Rails.logger.warn("Rate limit exceeded for API.")
+        return "Rate limit exceeded. Try again later."
+      end
+
+      response = HTTParty.get("https://rate-limited-api.com/#{resource}")
+      raise "API Error: #{response.code}" unless response.success?
+      JSON.parse(response.body)
+    rescue => e
+      Rails.logger.error("Error fetching rate-limited data: #{e.message}")
+      nil
+    end
+  end
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid making uncontrolled API requests without considering rate limits
+def fetch_data(resource)
+  100.times do # potentially exceeding rate limits
+    response = HTTParty.get("https://rate-limited-api.com/#{resource}")
+    puts response.code
+  end
+rescue => e
+  puts "Error: #{e.message}"
+  nil
+end
+"""
+
+**Why:**
+
+*   **Stability:** Prevents the application from being blocked or throttled by external services.
+*   **Fairness:** Ensures that the application does not consume an unfair share of API resources.
+*   **Cost Optimization:** Reduces the risk of incurring unexpected charges due to excessive API usage.
+
+## 3. Testing
+
+### 3.1  Unit Testing
+
+**Standard:** Use mocking and stubbing techniques to isolate API interaction logic for unit testing. Avoid making real API calls in unit tests.
+
+**Do This (RSpec + Webmock):**
+"""ruby
+# spec/lib/external_api/user_service_spec.rb
+require 'rails_helper'
+require 'webmock/rspec'
+
+RSpec.describe ExternalApi::UserService do
+  describe '.fetch_user' do
+    it 'fetches a user from the API' do
+      stub_request(:get, "https://external-api.com/users/123")
+        .to_return(status: 200, body: '{ "id": 123, "name": "Test User" }', headers: { 'Content-Type' => 'application/json' })
+
+      user = ExternalApi::UserService.fetch_user(123)
+      expect(user['name']).to eq('Test User')
+    end
+
+    it 'handles API errors' do
+      stub_request(:get, "https://external-api.com/users/123").to_return(status: 500)
+
+      expect(Rails.logger).to receive(:error).with(a_string_including("API Error: 500")) #Verify logging
+      user = ExternalApi::UserService.fetch_user(123)
+      expect(user).to be_nil
+    end
+  end
+end
+"""
+
+**Dont Do This:**
+
+"""ruby
+# Example of making real API calls in unit tests
+# This creates brittle tests that are slow and dependent on external services
+RSpec.describe ExternalApi::UserService do
+  describe '.fetch_user' do
+    it 'fetches a user from the API' do
+      # Making a real API call
+      user = ExternalApi::UserService.fetch_user(123)
+      expect(user).not_to be_nil
+    end
+  end
+end
+"""
+
+**Why:**
+
+*   **Speed:** Unit tests execute quickly without the overhead of network communication.
+*   **Reliability:** Unit tests are isolated from external dependencies, making them more predictable and less prone to failure.
+*   **Consistency:** Unit tests provide consistent results regardless of the availability or state of external services.
+
+### 3.2 Integration Testing
+
+**Standard:** Use integration tests (more limited in scope) to verify the interaction between the application and real or mocked external services. Be very selective about the number of 'real' integration tests, leaning on testing frameworks and mocks much moreso.
+
+**Do This:**
+
+"""ruby
+# spec/integration/user_api_spec.rb
+require 'rails_helper'
+
+RSpec.describe 'User API Integration', type: :request do
+  it 'fetches and displays a user' do
+    # Assuming you have a test API endpoint that returns a known user
+    get '/users/123' # Test actual routes with mocked out external requests.
+    expect(response).to have_http_status(200)
+    expect(response.body).to include('Test User') # Check data in full flow.
+  end
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid relying solely on end-to-end tests that cover too much functionality
+# Rely on more granular tests with mocking unless absolutely necessary
+
+# This is usually too broad for a single integration test.
+RSpec.describe 'Full User Flow', type: :system do
+  it 'creates, views, and updates a user' do
+    # navigates through entire user flow, less testable and maintainable.
+    visit '/users/new'
+    fill_in 'Name', with: 'Test User'
+    fill_in 'Email', with: 'test@example.com'
+    click_button 'Save'
+
+    expect(page).to have_content('User created successfully')
+    # ... more interactions
+  end
+end
+"""
+
+**Why:**
+*   **Confidence:** Validates that the application correctly integrates with external services and handles real-world scenarios.
+*   **Coverage:** Catches integration issues that may not be apparent in unit tests.
+*   **Realism:** Provides a more realistic assessment of the application's behavior and performance.
+
+## 4. Monitoring and Logging
+
+### 4.1 Detailed Logging
+
+**Standard:** Implement detailed logging to track API requests, responses, errors, and performance metrics. Use structured logging formats (e.g., JSON) for easier analysis and aggregation.
+
+**Do This:**
+
+"""ruby
+# Log API requests and responses with relevant details
+module ExternalApi
+  class UserService
+    def self.fetch_user(user_id)
+      Rails.logger.info("Fetching user with ID: #{user_id}")
+      response = HTTParty.get("https://external-api.com/users/#{user_id}")
+
+      if response.success?
+        Rails.logger.debug("API Response: #{response.body}")
+        JSON.parse(response.body)
+      else
+        Rails.logger.error("API Error: #{response.code} - #{response.body}")
+        nil
+      end
+    rescue => e
+      Rails.logger.error("Exception while fetching user: #{e.message}")
+      nil
+    end
+  end
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid minimal or inconsistent logging
+def fetch_user(user_id)
+  response = HTTParty.get("https://external-api.com/users/#{user_id}")
+  puts response.code # Insufficient logging
+  JSON.parse(response.body)
+rescue => e
+  puts "Error: #{e.message}" # Minimal information
+  nil
+end
+"""
+
+**Why:**
+
+*   **Visibility:** Provides insights into API usage patterns, performance bottlenecks, and potential issues.
+*   **Troubleshooting:** Facilitates rapid identification and resolution of API-related problems.
+*   **Auditing:** Enables tracking of API interactions for security and compliance purposes.
+
+## 5. Versioning and Compatibility
+
+### 5.1 API Versioning
+
+**Standard:** Use API versioning to manage changes to the API and maintain compatibility with older clients. Use URL-based versioning (e.g., "/api/v1/users") or header-based versioning (e.g., "Accept: application/vnd.api.v1+json").
+
+**Do This (URL-based Versioning):**
+
+"""ruby
+# config/routes.rb
+Rails.application.routes.draw do
+  namespace :api do
+    namespace :v1 do
+      resources :users
+    end
+  end
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Avoid making breaking changes to the API without versioning
+# This can cause compatibility issues with older clients
+
+get '/users/:id', to: 'users#show' # No versioning, risk of breaking changes
+"""
+
+**Why:**
+
+*   **Compatibility:** Ensures that older clients continue to function correctly even after the API is updated.
+*   **Flexibility:** Allows for introducing new features and changes without disrupting existing users.
+*   **Clarity:** Provides a clear and consistent way to manage API evolution.
+
+### 5.2 Graceful Degradation
+
+**Standard:** Implement graceful degradation strategies to handle situations where the API is unavailable or returns errors. Provide fallback mechanisms or informative error messages to minimize the impact on the user experience.
+
+**Do This:**
+
+"""ruby
+# Example: implement retry logic with a fallback
+
+module ExternalApi
+  class UserService
+    def self.fetch_user(user_id, retries: 3)
+      response = HTTParty.get("https://external-api.com/users/#{user_id}")
+      JSON.parse(response.body)
+    rescue => e
+      if retries > 0
+        Rails.logger.warn("Retrying after error: #{e.message}, #{retries} retries remaining")
+        sleep(2)  # wait before retrying
+        fetch_user(user_id, retries: retries - 1)  # Recursive call with less retries
+      else
+        Rails.logger.error("Failed to fetch user after multiple retries: #{e.message}")
+        return nil  # Provide fallback when all retries fail
+      end
+    end
+  end
+end
+"""
+
+**Don't Do This:**
+
+"""ruby
+# Aoid failing silently without providing any fallback mechanisms
+def fetch_user(user_id)
+  response = HTTParty.get("https://external-api.com/users/#{user_id}")
+  JSON.parse(response.body)
+rescue => e
+  # Catches the error but doesn't handle it.
+  # Returning nil may break parts of the application expecting data.
+  nil
+end
+"""
+
+**Why:**
+
+*   **Resilience:** Ensures that the application remains functional even when external services are unavailable.
+*   **User Experience:** Minimizes the impact of API failures on the user experience.
+*   **Maintainability:** Simplifies the process of handling API-related issues and reduces the risk of cascading failures.
+
+## 6. Security
+
+### 6.1 Input Validation
+
+**Standard**: Always validate and sanitize data received from external APIs before using it within the application.  This prevents vulnerability exploits and maintains data integrity.
+
+**Do This**:
+
+"""ruby
+# Validate and sanitize data after receiving it from the API
+module ExternalApi
+  class UserService
+    def self.fetch_user(user_id)
+      response = HTTParty.get("https://external-api.com/users/#{user_id}")
+      user_data = JSON.parse(response.body)
+
+      # Validate the user data (example)
+      return nil unless user_data.is_a?(Hash)
+      return nil unless user_data['name'].is_a?(String) && user_data['name'].length <= 255
+      # Can also use Rails validators for Models:
+      # User.new(user_data).valid?
+
+      # Sanitize the data (example)
+      user_data['name'] = ActionController::Base.helpers.sanitize(user_data['name'])
+
+      user_data # Return the validated / sanitized data
+    rescue => e
+      Rails.logger.error("Error fetching user: #{e.message}")
+      nil
+    end
+  end
+end
+"""
+
+**Don't Do This**:
+
+"""ruby
+# Blindly using external data without any validation or sanitization
+# Very dangerous
+def fetch_user(user_id)
+  response = HTTParty.get("https://external-api.com/users/#{user_id}")
+  user_data = JSON.parse(response.body)
+  # Using data directly without any checks
+  # Vulnerable to injection attacks and unexpected data types
+  puts "User Name: #{user_data['name']}"
+  puts "User Email: #{user_data['email']}"
+  user_data
+rescue => e
+  Rails.logger.error("Error fetching user: #{e.message}")
+  nil
+end
+"""
+
+**Why**:
+
+*   **Prevents Injection Attacks**:  Ensures that malicious content from external sources does not compromise the application by validating string lengths, types, and formats.
+*   **Data Integrity**: Maintains the consistency and reliability of the application's data by rejecting malformed or dangerous data.
+
+### 6.2 Output Encoding
+
+**Standard**: When displaying or processing data received from an API, especially in views or templates, ensure it's properly encoded to prevent cross-site scripting (XSS) attacks.
+
+**Do This**:
+
+"""ruby
+# View file (e.g., app/views/users/show.html.erb)
+<p>User Name: <%= h @user['name'] %></p>
+<p>User Email: <%= h @user['email'] %></p>
+
+# Note: "h" is a shortcut for "ERB::Util.html_escape"
+# Rails automatically escapes output by default.
+"""
+
+**Don't Do This**:
+
+"""ruby
+# Directly embedding API data in views without encoding
+# Vulnerable to XSS attacks
+<p>User Name: <%= @user['name'] %></p>
+<p>User Email: <%= @user['email'] %></p>
+"""
+
+**Why**:
+
+*   **Mitigates XSS Attacks**: Prevents scripts from external APIs from being executed in the user's browser by carefully sanitizing data.
+*   **Data Integrity**: Ensures that the displayed data is correctly presented and no characters are misinterpreted, which can lead to security or functional issues.
+
+This document provides comprehensive coding standards for API integration in Ruby development, promoting maintainability, performance, and security. Adhering to these standards ensures the development team can produce high-quality, reliable, and secure Ruby applications.
+
+# Core Architecture Standards for Ruby
+
+This document outlines the core architectural standards for Ruby projects, focusing on maintainability, performance, and security. These standards are designed to guide development teams and provide context for AI coding assistants to generate high-quality, consistent Ruby code. This standard is tailored specifically to the latest version of Ruby and emphasizes modern best practices.
+
+## 1. Architectural Patterns
+
+### 1.1 Model-View-Controller (MVC)
+
+**Standard:** Adopt the MVC architectural pattern for web applications.
+
+*   **Do This:** Structure your application into Models (data and logic), Views (presentation), and Controllers (handling user input and interactions).
+*   **Don't Do This:** Avoid tightly coupling Models, Views, and Controllers. Fat models, skinny controllers are generally preferred.
+
+**Why:** MVC promotes separation of concerns, making applications more maintainable, testable, and scalable.
+
+**Code Example (Rails MVC):**
+
+"""ruby
+  # app/models/user.rb
+  class User < ApplicationRecord
+    validates :email, presence: true, uniqueness: true
+    has_many :posts
+  end
+
+  # app/views/users/show.html.erb
+  <h1><%= @user.email %></h1>
+  <% @user.posts.each do |post| %>
+    <p><%= post.title %></p>
+  <% end %>
+
+  # app/controllers/users_controller.rb
+  class UsersController < ApplicationController
+    def show
+      @user = User.find(params[:id])
+    end
+  end
+"""
+
+**Anti-Pattern:** Placing business logic directly within views or controllers, leading to code duplication and making the application difficult to reason about.
+
+### 1.2 Service Objects
+
+**Standard:** Encapsulate complex business logic into Service Objects.
+
+*   **Do This:** Create dedicated classes to handle specific business operations, keeping controllers lean.
+*   **Don't Do This:** Put complex logic directly within models or controllers.
+
+**Why:** Service Objects promote code reusability, testability, and maintainability by isolating specific responsibilities.
+
+**Code Example:**
+
+"""ruby
+  # app/services/user_creator.rb
+  class UserCreator
+    def initialize(params)
+      @params = params
+    end
+
+    def call
+      user = User.new(@params)
+      if user.save
+        # Send welcome email
+        UserMailer.welcome_email(user).deliver_later
+        user
+      else
+        false
+      end
+    end
+  end
+
+  # app/controllers/users_controller.rb
+  class UsersController < ApplicationController
+    def create
+      user = UserCreator.new(params[:user]).call
+      if user
+        redirect_to user_path(user), notice: 'User created successfully'
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end
+  end
+"""
+
+**Anti-Pattern:** Overloading models with unrelated business logic, leading to "fat models" that are hard to maintain.
+
+### 1.3 Event-Driven Architecture
+
+**Standard:** Use an event-driven architecture for asynchronous tasks and decoupled components.
+
+*   **Do This:** Implement background processing using tools such as Sidekiq, Resque, or ActiveJob. Utilize Ruby's "concurrent" gem or standard "Thread" class for threading. Utilize "Hanami::Events" or "wisper´ for in-process events.
+*   **Don't Do This:** Perform long-running tasks within the request-response cycle.
+
+**Why:** Event-driven architecture improves application responsiveness and scalability by offloading tasks to background processes.
+
+**Code Example (Sidekiq):**
+
+"""ruby
+  # app/workers/email_worker.rb
+  class EmailWorker
+    include Sidekiq::Worker
+
+    def perform(user_id)
+      user = User.find(user_id)
+      UserMailer.welcome_email(user).deliver_now
+    end
+  end
+
+  # app/controllers/users_controller.rb
+  class UsersController < ApplicationController
+    def create
+      user = User.new(params[:user])
+      if user.save
+        EmailWorker.perform_async(user.id) # Enqueue the email sending
+        redirect_to user_path(user), notice: 'User created successfully'
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end
+  end
+"""
+
+**Anti-Pattern:** Blocking the main application thread with synchronous tasks, leading to poor user experience.
+
+### 1.4 API-First Design
+
+**Standard:** Design applications with an API-first approach.
+
+*   **Do This:** Define clear API contracts (e.g., using OpenAPI/Swagger) before implementing the UI or other client-facing components.
+*   **Don't Do This:** Build APIs as an afterthought or directly tied to the UI.
+
+**Why:** API-first design promotes reusability, interoperability, and scalability by decoupling the backend from the frontend.
+
+**Code Example (Rails API mode):**
+
+"""ruby
+  # config/routes.rb
+  Rails.application.routes.draw do
+    namespace :api do
+      namespace :v1 do
+        resources :users, only: [:index, :show, :create, :update, :destroy]
+      end
+    end
+  end
+
+  # app/controllers/api/v1/users_controller.rb
+  module Api
+    module V1
+      class UsersController < ApplicationController
+        def index
+          @users = User.all
+          render json: @users
+        end
+
+        # ... other actions
+      end
+    end
+  end
+"""
+
+**Anti-Pattern:** Creating tightly coupled APIs that are difficult to evolve independently.
+
+## 2. Project Structure and Organization
+
+### 2.1 Directory Structure
+
+**Standard:** Follow a consistent and logical directory structure.
+
+*   **Do This:** Organize code into "app", "lib", "config", "db", "spec" (or "test") directories.
+*   **Don't Do This:** Scatter files randomly throughout the project.
+
+**Why:** A well-defined directory structure improves code discoverability, maintainability, and collaboration.
+
+**Example:**
+
+"""
+  my_project/
+  ├── app/
+  │   ├── models/
+  │   ├── views/
+  │   ├── controllers/
+  │   ├── services/
+  │   ├── mailers/
+  │   └── helpers/
+  ├── lib/
+  │   └── my_gem/        # External libraries & utilities
+  ├── config/
+  │   ├── routes.rb
+  │   ├── application.rb
+  │   └── database.yml
+  ├── db/
+  │   ├── migrate/
+  │   └── seeds.rb
+  ├── spec/              # or test/
+  │   ├── models/
+  │   ├── controllers/
+  │   └── support/
+  ├── Gemfile
+  ├── README.md
+  └── .gitignore
+"""
+
+**Anti-Pattern:** Putting unrelated code in a single directory, making it difficult to find and understand.
+
+### 2.2 Module Organization
+
+**Standard:** Use modules to group related classes and functions.
+
+*   **Do This:** Create modules to encapsulate related functionality and prevent namespace collisions.
+*   **Don't Do This:** Define global functions or classes without proper namespacing.
+
+**Why:** Modules improve code organization, readability, and maintainability.
+
+**Code Example:**
+
+"""ruby
+  # lib/payment_gateway.rb
+  module PaymentGateway
+    class Client
+      def self.charge(amount, credit_card)
+        # ... implementation
+      end
+    end
+
+    module Adapters
+      class Stripe
+        def self.charge(amount, token)
+          # ... Stripe specific impl
+        end
+      end
+    end
+  end
+
+  # Usage
+  PaymentGateway::Client.charge(100, credit_card_info)
+  PaymentGateway::Adapters::Stripe.charge(100, stripe_token)
+
+"""
+
+**Anti-Pattern:** Defining global classes or functions that can clash with other libraries or code.
+
+### 2.3 Dependency Injection
+
+**Standard:** Utilize dependency injection to decouple components.
+
+*   **Do This:** Pass dependencies into classes or functions instead of hardcoding them.
+*   **Don't Do This:** Create tight coupling through global variables or direct instantiation of dependencies within classes.
+
+**Why:** Dependency injection increases code testability and flexibility by allowing dependencies to be easily swapped or mocked.
+
+**Code Example:**
+
+"""ruby
+  # Injecting a logger dependency
+  class MyService
+    def initialize(logger:)
+      @logger = logger
+    end
+
+    def do_something
+      @logger.info "Doing something..."
+      # ... implementation
+    end
+  end
+
+  # Usage with different loggers
+  my_service = MyService.new(logger: Logger.new($stdout))
+  my_service.do_something
+
+  my_service = MyService.new(logger: MockLogger.new) # For testing Purposes
+  my_service.do_something
+"""
+
+**Anti-Pattern:** Hardcoding dependencies within classes, making it difficult to test or reuse them in different contexts.
+
+## 3. Code-Level Standards
+
+### 3.1 Naming Conventions
+
+**Standard:** Follow consistent naming conventions.
+
+*   **Do This:** Use descriptive names for classes, methods, and variables. Use snake_case for variables and methods, PascalCase for classes and modules.
+*   **Don't Do This:** Use cryptic or ambiguous names.
+
+**Why:** Clear naming improves code readability and understanding.
+
+**Code Example:**
+
+"""ruby
+  class UserProfile   #  Use PascalCase for Class Names
+    def calculate_age  # Use snake_case for method names
+      @date_of_birth  # Example of a variable name
+    end
+  end
+
+  # Avoid:
+  # class UP
+  # def calc
+  # x = ...
+"""
+
+**Anti-Pattern:** Using single-letter variable names or unclear abbreviations.
+
+### 3.2 Modularity
+
+**Standard:** Write modular code.
+
+*   **Do This:** Break down complex methods into smaller, self-contained functions.
+*   **Don't Do This:** Write long, monolithic functions that are difficult to understand and test.
+
+**Why:** Modular code improves readability, testability, and reusability.
+
+**Code Example:**
+
+"""ruby
+  def process_order(order)
+    validate_order(order)
+    calculate_total(order)
+    charge_customer(order)
+    send_confirmation_email(order)
+  end
+
+  private
+
+  def validate_order(order)
+    # ... validation logic
+  end
+
+  def calculate_total(order)
+    # ... calculation logic
+  end
+
+  # ... other private methods
+"""
+
+**Anti-Pattern:** Writing large, complex methods that perform multiple unrelated tasks.
+
+### 3.3 Error Handling
+
+**Standard:** Implement robust error handling mechanisms.
+
+*   **Do This:** Use "begin...rescue...end" blocks to handle exceptions. Raise exceptions when necessary.
+*   **Don't Do This:** Ignore exceptions or swallow errors silently.
+
+**Why:** Proper error handling prevents application crashes and provides meaningful feedback to users.
+
+**Code Example:**
+
+"""ruby
+  def process_file(filename)
+    begin
+      file = File.open(filename)
+      # ... process file
+    rescue Errno::ENOENT => e
+      Rails.logger.error "File not found: #{e.message}"
+      # Raise a custom exception or return an error status.
+      raise CustomFileNotFoundError, "File not found: #{filename}"
+    rescue StandardError => e
+      Rails.logger.error "An unexpected error occurred: #{e.message}"
+      # Handle other errors appropriately
+    ensure
+      file.close if file # Ensure file close to prevent resource leaks
+    end
+  end
+"""
+
+**Anti-Pattern:** Ignoring exceptions or using bare "rescue" blocks without specifying the exception type.
+
+### 3.4 Performance Optimization
+
+**Standard:** Optimize code for performance.  Use tools such as "benchmark", "memory_profiler" or "flamegraph" to assist!
+
+*   **Do This:** Use efficient data structures and algorithms. Avoid unnecessary database queries.  Consider using caching strategies via Rails built-in caching or external caches like Redis.
+*   **Don't Do This:** Write code that performs poorly or consumes excessive resources. Premature optimization!
+
+**Why:** Performance optimization improves application responsiveness and scalability.
+
+**Code Example:**
+
+"""ruby
+  # Instead of:
+  users.each { |user| puts user.name }
+
+  # Use map(&:name) for performance:
+  names = users.map(&:name) # More efficient as you pre-allocate memory for a dedicated array
+
+  # SQL Optimization
+  # Instead of:
+  orders.each { |order| puts order.customer.name } # N+1 query problem
+
+  # Use includes to eager load associations:
+  orders = Order.includes(:customer)
+  orders.each { |order| puts order.customer.name } # Reduces database queries
+"""
+
+**Anti-Pattern:** Ignoring performance issues or writing inefficient code with little to no thought of optimization.
+
+### 3.5 Security Considerations
+
+**Standard:** Implement security best practices.
+
+*   **Do This:** Sanitize user input. Protect against SQL injection, cross-site scripting (XSS), and other common vulnerabilities. Utilize tools like Brakeman for static analysis.
+*   **Don't Do This:** Store sensitive data in plain text.
+
+**Why:** Security best practices protect the application and its users from threats.
+
+**Code Example:**
+
+"""ruby
+  # Sanitize user input
+  params[:search_term] = ActionController::Base.helpers.sanitize(params[:search_term])
+
+  # Use parameterized queries to prevent SQL injection
+  User.where("email = ?", params[:email])
+
+  # Use bcrypt for password hashing
+  def password=(new_password)
+    @password = BCrypt::Password.create(new_password)
+    self.password_hash = @password
+  end
+"""
+
+**Anti-Pattern:** Storing passwords in plain text or failing to sanitize user input.
+
+## 4. Specific Ruby Features (Latest Version)
+
+### 4.1 Pattern Matching
+
+**Standard:** Utilize pattern matching for concise and expressive code.
+
+*   **Do This:** Use "case...in" statements to match complex data structures.
+*   **Don't Do This:** Rely solely on traditional "if...else" statements for complex conditional logic.
+
+**Why:** Pattern matching simplifies complex conditional logic and makes code more readable.
+
+**Code Example:**
+
+"""ruby
+  result = {status: :ok, data: {name: "John", age: 30}}
+
+  case result
+  in {status: :ok, data: {name: String => name, age: Integer => age}}
+    puts "Name: #{name}, Age: #{age}"
+  in {status: :error, message: String => message}
+    puts "Error: #{message}"
+  else
+    puts "Unknown result"
+  end
+"""
+
+**Anti-Pattern:** Missing opportunities to use powerful pattern matching features in suitable situations.
+
+### 4.2 Fiber Scheduler/Concurrency
+
+**Standard:** Use fibers for concurrent code execution
+
+*   **Do This:** Use "Fiber.schedule" to execute functions concurrently without native threads.
+*   **Don't Do This:** Use many OS-level threads unless specifically needed.
+
+**Why:** Fibers greatly improve concurrency performance.
+
+**Code Example:**
+
+"""ruby
+Fiber.schedule do
+  # concurrent code!
+  puts "Running in a fiber!"
+end
+"""
+
+**Anti-Pattern:** Ignoring the existance and performance benefits of fibers.
+
+### 4.3 Ractor
+
+**Standard**: Use Ractor for parallel code execution.
+
+*   **Do This**: Isolate state between "Ractor"s to avoid data races.
+*   **Don't Do This**: Share mutable state directly between "Ractor"s.
+
+**Why**: Helps achieve true parallelism in Ruby code.
+
+**Code Example:**
+
+"""ruby
+  r = Ractor.new { puts "Hello from a ractor!" }
+  r.take #=> "Hello from a ractor!"
+"""
+
+**Anti-Pattern**: Sharing mutable data between actors without synchronization.
+
+## 5. Tooling and Automation
+
+### 5.1 Linters and Code Analysis
+**Standard:** Use Linters (Rubocop), Security Scanners (Brakeman) and code analysis tools
+
+*   **Do This:** Configure Rubocop with a configuration file (".rubocop.yml") to enforce the coding standards defined in this document.
+*   **Do This:** Integrate Brakeman into the CI/CD pipeline.
+*   **Don't Do This:** Ignore warnings from the linter and static analysis tools.
+
+### 5.2 Testing Framework
+**Standard**: Implement automated test suites using RSpec or Minitest
+
+*   **Do This**: Aim for high test coverage. Write unit, integration and end-to-end tests.
+*   **Don't Do This**: Skip writing tests or commit code with failing tests.
+
+### 5.3 Continuous Integration & Continuous Deployment (CI/CD)
+
+**Standard:** Use CI/CD pipelines for automated builds, tests, and deployments.
+
+*   **Do This:** Integrate the CI/CD pipeline with code repositories (e.g., GitHub, GitLab).
+*   **Don't Do This:** Deploy code manually without automated testing or validation.
+
+**Why:** CI/CD automates the software development lifecycle, resulting in faster delivery, fewer bugs, and higher quality.
+
+**Code Example (GitHub Actions):**
+
+"""yaml
+  # .github/workflows/main.yml
+  name: Ruby CI
+
+  on:
+    push:
+      branches: [ main ]
+    pull_request:
+      branches: [ main ]
+
+  jobs:
+    test:
+      runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgres:13
+          ports: ['5432:5432']
+          env:
+            POSTGRES_USER: ruby
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: test_db
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+      steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2   # specify version of Ruby to use (eg: 2.7.2)
+          bundler-cache: true  # runs 'bundle install' and caches installed gems automatically
+
+      - name: Configure application
+        run: cp config/database.yml.example config/database.yml
+
+      - name: Create and Migrate Database
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+
+      - name: Run tests
+        run: bundle exec rspec
+"""
+
+This comprehensive document provides a foundation for building robust, maintainable, and high-performing Ruby applications, aligning with the latest features and best practices of the language.
+
+# Code Style and Conventions Standards for Ruby
+
+This document outlines the code style and conventions standards for Ruby development. Adhering to these standards ensures consistency, readability, maintainability, and performance across projects. It is designed to guide developers and provide context for AI coding assistants. These guidelines are based on modern Ruby practices and the latest version of the language.
+
+## 1. General Formatting
+
+### 1.1. Line Length
+
+**Do This:** Limit lines to a maximum of 80 characters. Consider increasing this limit to 100 characters only if the team agrees.
+
+**Don't Do This:** Exceed the line length limit, which makes code harder to read and review.
+
+**Why:** Enforcing a line length limit improves readability, especially when viewing code in terminals or side-by-side diffs. It also encourages breaking down complex expressions into smaller, more manageable parts.
+
+"""ruby
+# Good:
+result = calculate_average(numbers.map { |n| n * 2 }.select(&:positive?))
+
+# Bad:
+result = calculate_average(numbers.map { |number| number * 2 }.select { |number| number.positive? })
+"""
+
+### 1.2. Indentation
+
+**Do This:** Use 2 spaces for indentation.
+
+**Don't Do This:** Use tabs or a different number of spaces.
+
+**Why:** Consistent indentation is crucial for readability. 2 spaces are the most common and widely accepted standard in the Ruby community.
+
+"""ruby
+# Good:
+def my_method
+  if condition
+    puts "Hello"
+  end
+end
+
+# Bad:
+def my_method
+ if condition
+  puts "Hello"
+ end
+end
+"""
+
+### 1.3. Whitespace
+
+**Do This:** Use whitespace consistently.
+
+*   Use spaces around operators (=, +, -, *, /, ==, !=, >, <, >=, <=).
+*   Use spaces after commas in argument lists, hashes, and arrays.
+*   Omit spaces inside parentheses, brackets, and braces.
+*   Use a blank line between method definitions.
+*   Use one or two blank lines to separate logical sections within a method.
+
+**Don't Do This:** Inconsistent spacing, which makes code harder to parse visually.
+
+**Why:** Consistent whitespace enhances readability by visually separating different code elements.
+
+"""ruby
+# Good:
+def my_method(arg1, arg2)
+  result = arg1 + arg2
+  puts result
+end
+
+# Bad:
+def my_method(arg1,arg2)
+ result=arg1+arg2
+ puts result
+end
+"""
+
+### 1.4. Trailing Whitespace
+
+**Do This:** Remove all trailing whitespace.
+
+**Don't Do This:** Leave any trailing whitespace.
+
+**Why:** Trailing whitespace adds unnecessary noise to code and can cause issues in diffs and merges.
+
+Most editors have configuration options to visualize and remove trailing whitespace.
+
+## 2. Naming Conventions
+
+### 2.1. General Naming
+
+**Do This:** Use descriptive and meaningful names.
+
+**Don't Do This:** Use cryptic or ambiguous names.
+
+**Why:** Clear naming significantly improves code understanding and reduces the need for comments to explain variable or method purposes.
+
+### 2.2. Variables
+
+**Do This:** Use "snake_case" for variable names.
+
+**Don't Do This:** Use "camelCase" or other naming conventions.
+
+**Why:** "snake_case" is the standard in Ruby.
+
+"""ruby
+# Good:
+user_name = "John Doe"
+order_total = 100.0
+
+# Bad:
+userName = "John Doe"
+orderTotal = 100.0
+"""
+
+### 2.3. Methods
+
+**Do This:** Use "snake_case" for method names.  Method names should be verbs or verb phrases representing actions.  Use predicate methods (returning boolean values) ending with a question mark (?).
+
+**Don't Do This:** Use "camelCase" or nouns for method names (unless defining accessors). Predicate methods that don't return booleans or don't end with a question mark.
+
+**Why:** Follow Ruby conventions for method names to maintain consistency.
+
+"""ruby
+# Good:
+def calculate_average(numbers)
+  numbers.sum / numbers.size.to_f
+end
+
+def user_exists?(username)
+  !find_user(username).nil?
+end
+
+
+# Bad:
+def CalculateAverage(numbers) # Wrong case
+  numbers.sum / numbers.size.to_f
+end
+
+def user_exists(username) # missing ? and doesn't always return a boolean
+   find_user(username)
+end
+"""
+
+### 2.4. Classes and Modules
+
+**Do This:** Use "CamelCase" for class and module names.
+
+**Don't Do This:** Use "snake_case" or other naming conventions.
+
+**Why:** It improves readability and separates classes and modules from other constants.
+
+"""ruby
+# Good:
+class UserProfile
+  # ...
+end
+
+module Authentication
+  # ...
+end
+
+# Bad:
+class user_profile
+  # ...
+end
+
+module authentication
+  # ...
+end
+"""
+
+### 2.5. Constants
+
+**Do This:** Use "UPPER_SNAKE_CASE" for constants.
+
+**Don't Do This:** Use lowercase or mixed-case names.
+
+**Why:** Distinguishes constants from variables.
+
+"""ruby
+# Good:
+MAX_RETRIES = 3
+API_ENDPOINT = "https://example.com/api"
+
+# Bad:
+MaxRetries = 3
+api_endpoint = "https://example.com/api"
+"""
+
+## 3. Stylistic Consistency
+
+### 3.1. Prefer "do...end" or "{...}" for Blocks
+
+**Do This:** Use "{...}" (braces) for single-line blocks and "do...end" for multi-line blocks.
+
+**Don't Do This:** Use "do...end" for single-line blocks or "{...}" for complex multi-line blocks.
+
+**Why:** It increases readability.
+
+"""ruby
+# Good:
+numbers.each { |number| puts number * 2 }
+
+numbers.each do |number|
+  puts number * 2
+  puts "Squared!"
+end
+
+# Bad:
+numbers.each do |number| puts number * 2 end # Single line with do end
+
+numbers.each { |number| # multi line with braces
+  puts number * 2
+  puts "Squared!"
+}
+"""
+
+### 3.2. String Literals
+
+**Do This:** Prefer single-quoted strings when no interpolation or special characters are needed.  Use double-quoted strings for interpolation and special characters. Use "%()" or "%[]" for strings with many single quotes.
+
+**Don't Do This:** Unnecessary use of double quotes which impacts performance.
+
+**Why:** Improves performance and readability. Single-quoted strings avoid unnecessary interpretation.
+
+"""ruby
+# Good:
+name = "John"
+puts 'Hello'     # No interpolation needed
+puts "Hello, #{name}" # Interpolation
+puts %(This string has 'single quotes')
+
+# Bad:
+name = "John"
+puts "Hello"  # Unnecessary double quotes
+puts 'Hello, #{name}' # No interpolation
+"""
+
+### 3.3. Boolean Expressions
+
+**Do This:** Use "unless" instead of "if" for negative conditions (when it improves readability, check for complexity). Use "!" (not) operator sparingly to avoid complexity when negative conditions are involved.
+
+**Don't Do This:** Overuse "unless" for complex boolean logic. Misuse of the "!" operator.
+
+**Why:** "unless" can make code more readable for simple negative conditions.  Overuse or complex negation can make the code harder to understand.
+
+"""ruby
+# Good:
+unless user.active?
+  puts "User is not active"
+end
+
+if !user.admin? # can be clearer
+  puts "User is not an admin"
+end
+
+
+# Bad:
+if !(!user.active?) # Hard to read
+ puts "User is active"
+end
+"""
+
+### 3.4. Ternary Operator
+
+**Do This:** Use the ternary operator ("condition ? value_if_true : value_if_false") for simple conditional assignments.
+
+**Don't Do This:** Use the ternary operator for complex logic; use "if/else" instead.
+
+**Why:** Keeps code concise for simple assignments.
+
+"""ruby
+# Good:
+status = user.active? ? "Active" : "Inactive"
+
+# Bad:
+status = if user.active?
+           "Active"
+         else
+           "Inactive"
+         end
+"""
+
+### 3.5. Method Arguments
+
+**Do This:** Use keyword arguments for methods with more than two arguments or when clarity is needed. Use default values for optional arguments.
+
+**Don't Do This:** Rely solely on positional arguments for complex methods.
+
+**Why:** Keyword arguments improve readability and reduce errors.
+
+"""ruby
+# Good:
+def create_user(name:, age:, email: nil)
+  # ...
+end
+
+create_user(name: "John", age: 30, email: "john@example.com")
+
+# Bad:
+def create_user(name, age, email)
+  # ...
+end
+
+create_user("John", 30, "john@example.com") #Harder to read and maintain.
+"""
+
+### 3.6. Implicit vs. Explicit Return
+
+**Do This:** Use implicit return (last expression in a method is returned) when appropriate.
+
+**Don't Do This:** Always use "return" keyword (unless for early exit).
+
+**Why:** Reduces verbosity.
+
+"""ruby
+# Good:
+def add(a, b)
+  a + b
+end
+
+# Bad:
+def add(a, b)
+  return a + b
+end
+"""
+
+### 3.7. Parentheses
+
+**Do This:** Omit parentheses when calling methods without arguments.
+
+**Don't Do This:** Always include parentheses, which can reduce readability.
+
+**Why:** Improves readability by reducing visual clutter.
+
+"""ruby
+# Good:
+puts "Hello"
+current_time = Time.now
+
+# Bad:
+puts("Hello")
+current_time = Time.now()
+"""
+
+## 4. Design Patterns & Advanced Techniques
+
+### 4.1. Module Inclusion and Extension
+
+**Do This:** Use "include" for adding instance methods and "extend" for adding class methods.
+
+**Don't Do This:** Mix them up or use them inconsistently.
+
+**Why:** Maintains clarity about the role of modules.
+
+"""ruby
+module Printable
+  def print
+    puts "Printing..."
+  end
+end
+
+class Document
+  include Printable #Adds instance methods
+  extend Printable # Adds class methods - INCORRECT
+end
+
+Document.new.print # calls instance method
+Document.print # raises error as it is not a class method.
+
+module ClassPrintable
+  def print_class_name
+    puts "Class name is #{self.name}"
+  end
+end
+
+
+class Book
+  extend ClassPrintable # Add class methods.
+
+end
+
+Book.print_class_name # works as expected.
+Book.new.print_class_name # raises an error.
+"""
+
+### 4.2. Enumerators
+
+**Do This:** Use enumerators to create lazy sequences or custom iteration logic.
+
+**Don't Do This:** Overuse arrays for operations that can be performed lazily.
+
+**Why:** Improves performance by only computing values when needed.
+
+"""ruby
+# Good:
+fibonacci = Enumerator.new do |yielder|
+  a = b = 1
+  loop do
+    yielder << a
+    a, b = b, a + b
+  end
+end
+
+puts fibonacci.take(10) # => [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+
+# Bad:
+fibonacci_array = []
+a = b = 1
+10.times do
+  fibonacci_array << a
+  a, b = b, a + b
+end
+puts fibonacci_array
+"""
+
+### 4.3. Metaprogramming
+
+**Do This:** Use metaprogramming judiciously for DRY (Don't Repeat Yourself) and creating flexible APIs.
+
+**Don't Do This:** Overuse metaprogramming, which can make code hard to understand and debug.
+
+**Why:** Powerful but can reduce readability if not used carefully.
+
+"""ruby
+# Good:
+class Model
+  def self.attribute(name, type)
+    define_method(name) do
+      instance_variable_get("@#{name}")
+    end
+
+    define_method("#{name}=") do |value|
+      # Type validation logic
+      instance_variable_set("@#{name}", value)
+    end
+  end
+end
+
+class Product < Model
+  attribute :name, :string
+  attribute :price, :decimal
+end
+
+product = Product.new
+product.name = "Laptop"
+puts product.name # => Laptop
+
+# Bad: Overcomplicated
+"""
+
+### 4.4. Delegate
+
+**Do This:** Use "delegate" to forward method calls to associated objects.
+
+**Don't Do This:** Manually implement forwarding methods.
+
+**Why:** Simplifies object interaction and reduces boilerplate code.
+
+"""ruby
+require 'delegate'
+
+class User
+  attr_reader :profile
+  def initialize(profile)
+    @profile = profile
+  end
+end
+
+class UserProfile
+  attr_accessor :address, :phone_number, :email
+
+  def initialize(address:, phone_number:, email:)
+    @address = address
+    @phone_number = phone_number
+    @email = email
+  end
+end
+
+class DelegatedUser < DelegateClass(User)
+
+  def initialize(user)
+    super(user)
+  end
+
+  def address
+    profile.address
+  end
+
+  def phone_number
+    profile.phone_number
+  end
+
+  def email
+    profile.email
+  end
+end
+
+profile = UserProfile.new(address: "123 Main St", phone_number: "555-1234", email: "test@example.com")
+
+user = User.new(profile)
+
+delegated_user = DelegatedUser.new(user)
+
+puts delegated_user.address # => 123 Main St
+puts delegated_user.phone_number # => 555-1234
+"""
+
+### 4.5 Use of "Dig" Method with Hashes and Arrays
+
+**Do This:** Use the "dig" method to safely access nested elements in hashes and arrays
+
+**Don't Do This:** Chain bracket operators without checking for "nil" values, which can lead to "NoMethodError" exceptions
+
+**Why:** "dig" provides a concise and safe way to access nested data structures, preventing errors when dealing with potentially missing or "nil" values.
+
+"""ruby
+# Good:
+data = { "user" => { "profile" => { "email" => "test@example.com" } } }
+
+email = data.dig("user", "profile", "email") 
+
+puts email # => test@example.com
+
+missing_value = data.dig("user", "missing", "email")
+
+puts missing_value # => nil
+
+
+# Bad:
+data = { "user" => { "profile" => { "email" => "test@example.com" } } }
+
+email = data["user"]["profile"]["email"] # works if all keys are present
+# If any key is missing this will cause a NoMethodError.
+
+puts email # => test@example.com
+"""
+
+## 5. Ruby Ecosystem and Tooling
+
+### 5.1. RuboCop
+
+**Do This:** Use RuboCop for static code analysis to enforce style guidelines automatically.
+
+**Don't Do This:** Ignore RuboCop warnings and errors.
+
+**Why:** Automates style checking, ensuring compliance with agreed-upon standards.
+
+Configure RuboCop with ".rubocop.yml" to align with your project-specific needs.
+
+### 5.2 Bundler
+
+**Do This:** Use Bundler to manage gem dependencies.
+
+**Don't Do This:** Manually install gems or modify the environment without Bundler.
+
+**Why:** Ensure consistent dependencies across different environments.
+
+### 5.3 Rails
+
+**Do This:** Follow Rails conventions for file structure, naming, and code organization.
+
+**Don't Do This:** Deviate from Rails conventions without a strong reason.
+
+**Why:** Rails conventions promote consistency and make code easier to understand for other Rails developers.
+
+### 5.4 RSpec
+
+**Do This:** Write comprehensive RSpec tests to verify functionality and prevent regressions.
+
+**Don't Do This:** Skip writing tests or write incomplete tests.
+
+**Why:** Ensures code quality, reliability, and maintainability.
+
+## 6. Error Handling and Security
+
+### 6.1. Exception Handling
+
+**Do This:** Use "begin...rescue...end" blocks to handle exceptions gracefully. Log exceptions with sufficient context for debugging. Reraise exceptions when appropriate.
+
+**Don't Do This:** Catch broad exceptions (e.g., "Exception") without a good reason. Ignore exceptions or fail silently.
+
+**Why:** Prevents application crashes and provides valuable information for debugging.
+
+"""ruby
+# Good:
+begin
+  result = perform_operation
+rescue SpecificError => e
+  log_error(e)
+  # Handle the specific error
+rescue => e # generic error handling
+  log_error(e)
+  raise # re-raise the exception.
+end
+
+# Bad:
+begin
+  result = perform_operation
+rescue Exception => e #Too broad exception
+  #Empty rescue block - fails silently.
+end
+"""
+
+### 6.2. Security Best Practices
+
+**Do This:** Sanitize user inputs to prevent SQL injection, XSS, and other vulnerabilities. Use parameterized queries with ActiveRecord. Use secure password hashing (e.g., "bcrypt"). Follow OWASP guidelines for web application security.
+
+**Don't Do This:** Trust user inputs without validation and sanitization. Store passwords in plain text. Ignore security warnings and vulnerabilities.
+
+**Why:** Protects application and user data from security threats.
+
+"""ruby
+# Good:
+# Using parameterized queries:
+user = User.find_by(email: params[:email])
+
+# Using bcrypt for password hashing:
+password_hash = BCrypt::Password.create(params[:password])
+
+# Bad:
+# SQL Injection Vulnerability
+User.find_by_sql("SELECT * FROM users WHERE email = '#{params[:email]}'")
+
+#Storing passwords in plaintext BAD.
+"""
+
+### 6.3. Code Comments
+
+**Do This:** Write clear and concise comments to explain complex logic or non-obvious code. Use YARD for documenting public APIs.
+
+**Don't Do This:** Over-comment obvious code or write comments that are outdated or incorrect.
+
+**Why:** Comments should clarify intent and improve code understanding.
+
+"""ruby
+# Good:
+# This method calculates the average of a list of numbers.
+# Handles empty lists by returning 0.
+def calculate_average(numbers)
+  return 0 if numbers.empty?
+  numbers.sum / numbers.size.to_f
+end
+
+# Bad:
+# Adds two numbers
+def add(a, b) # comment is redundant
+  a + b
+end
+"""
+
+By consistently following these coding standards, Ruby developers can produce high-quality, maintainable, and secure code. This document serves as a valuable reference for both experienced developers and those new to the Ruby language. Using AI-assisted coding tools in conjunction with these standards will amplify productivity and further ensure code quality across the project.
