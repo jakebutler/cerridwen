@@ -1,0 +1,1220 @@
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mRAILS_ENV[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, and [36mMAX_FILE_SIZE[0m
+[dotenv] Loaded [33m.env[0m
+DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2. (called from <top (required)> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/config/environment.rb:5)
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mRAILS_ENV[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, and [36mMAX_FILE_SIZE[0m
+[dotenv] Loaded [33m.env[0m
+DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2. (called from <top (required)> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/config/environment.rb:5)
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mRAILS_ENV[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, and [36mMAX_FILE_SIZE[0m
+[dotenv] Loaded [33m.env[0m
+DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2. (called from <top (required)> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/config/environment.rb:5)
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mRAILS_ENV[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, and [36mMAX_FILE_SIZE[0m
+[dotenv] Loaded [33m.env[0m
+DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2. (called from <top (required)> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/config/environment.rb:5)
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mRAILS_ENV[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, and [36mMAX_FILE_SIZE[0m
+[dotenv] Loaded [33m.env[0m
+DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2. (called from <top (required)> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/config/environment.rb:5)
+  [1m[35m (6.3ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7951938722078634255)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.9ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.6ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2025-07-19 19:14:29.595481', '2025-07-19 19:14:29.595484') RETURNING "key"[0m
+Migrating to DeviseCreateUsers (1)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (6.5ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp(6), "remember_created_at" timestamp(6), "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('1') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateProjects (2)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (12.1ms)[0m  [1m[35mCREATE TABLE "projects" ("id" bigserial primary key, "user_id" bigint NOT NULL, "name" character varying NOT NULL, "description" text NOT NULL, "tech_stack" text, "dev_identity" character varying NOT NULL, "requirements_file_content" text, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_b872a6760a"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE INDEX "index_projects_on_user_id" ON "projects" ("user_id")[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE INDEX "index_projects_on_user_id_and_updated_at" ON "projects" ("user_id", "updated_at")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('2') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateRulesets (3)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (4.1ms)[0m  [1m[35mCREATE TABLE "rulesets" ("id" bigserial primary key, "project_id" bigint NOT NULL, "content" text NOT NULL, "version" integer DEFAULT 1 NOT NULL, "is_public" boolean DEFAULT FALSE, "uuid" character varying NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_fbaf7fd202"
+FOREIGN KEY ("project_id")
+  REFERENCES "projects" ("id")
+)[0m
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE INDEX "index_rulesets_on_project_id" ON "rulesets" ("project_id")[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_rulesets_on_uuid" ON "rulesets" ("uuid")[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_rulesets_on_project_id_and_version" ON "rulesets" ("project_id", "version")[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE INDEX "index_rulesets_on_is_public" ON "rulesets" ("is_public")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('3') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT pg_advisory_unlock(7951938722078634255)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mRAILS_ENV[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, and [36mMAX_FILE_SIZE[0m
+[dotenv] Loaded [33m.env[0m
+DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2. (called from <top (required)> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/config/environment.rb:5)
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[36mUser Create (0.9ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["email", "test@example.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil], ["created_at", "2025-07-19 19:14:40.407059"], ["updated_at", "2025-07-19 19:14:40.407059"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+DEPRECATION WARNING: Passing the class as positional argument is deprecated and will be removed in Rails 7.2.
+
+Please pass the class as a keyword argument:
+
+  serialize :tech_stack, type: Array
+ (called from <class:Project> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/app/models/project.rb:10)
+  [1m[36mProject Load (1.3ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."user_id" = $1 AND "projects"."name" = $2 LIMIT $3[0m  [["user_id", 1], ["name", "Sample Ruby on Rails App"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mProject Create (1.5ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Sample Ruby on Rails App"], ["description", "A sample Ruby on Rails application for testing the Rules Wizard"], ["tech_stack", "---\n- Ruby on Rails\n- PostgreSQL\n- TailwindCSS\n"], ["dev_identity", "experienced_dev"], ["requirements_file_content", "# Sample requirements\\n- Use Ruby on Rails 7\\n- Implement user authentication\\n- Follow MVC pattern"], ["created_at", "2025-07-19 19:14:40.427546"], ["updated_at", "2025-07-19 19:14:40.427546"]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mRuleset Load (1.6ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 AND "rulesets"."version" = $2 LIMIT $3[0m  [["project_id", 1], ["version", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/models/ruleset.rb:26:in 'Ruleset#set_version'
+  [1m[36mRuleset Maximum (0.3ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 1]]
+  ↳ app/models/ruleset.rb:26:in 'Ruleset#set_version'
+  [1m[36mRuleset Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 1], ["project_id", 1], ["LIMIT", 1]]
+  [1m[36mRuleset Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "bba87955-e0f0-4ce5-91ce-42d236f6e743"], ["LIMIT", 1]]
+  [1m[36mRuleset Create (1.0ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 1], ["content", "# Ruby on Rails Development Rules\n\n## Architecture\n- Follow MVC pattern strictly\n- Use service objects for complex business logic\n- Keep controllers thin\n\n## Code Style\n- Use snake_case for variables and methods\n- Use PascalCase for classes and modules\n- Follow Ruby community conventions\n\n## Testing\n- Write comprehensive RSpec tests\n- Use factories for test data\n- Mock external API calls\n\n## Security\n- Sanitize all user inputs\n- Use parameterized queries\n- Implement proper authentication\n"], ["version", 1], ["is_public", true], ["uuid", "bba87955-e0f0-4ce5-91ce-42d236f6e743"], ["created_at", "2025-07-19 19:14:40.443696"], ["updated_at", "2025-07-19 19:14:40.443696"]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mRuleset Load (0.2ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 1], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in 'Project#latest_ruleset'
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mRAILS_ENV[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, and [36mMAX_FILE_SIZE[0m
+[dotenv] Loaded [33m.env[0m
+DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2. (called from <top (required)> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/config/environment.rb:5)
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mRAILS_ENV[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, and [36mMAX_FILE_SIZE[0m
+[dotenv] Loaded [33m.env[0m
+DEPRECATION WARNING: `Rails.application.secrets` is deprecated in favor of `Rails.application.credentials` and will be removed in Rails 7.2. (called from <top (required)> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/config/environment.rb:5)
+Started GET "/" for 127.0.0.1 at 2025-07-19 12:16:27 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /opt/homebrew/lib/ruby/gems/3.4.0/gems/railties-7.1.5.1/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /opt/homebrew/lib/ruby/gems/3.4.0/gems/railties-7.1.5.1/lib/rails/templates/rails/welcome/index.html.erb (Duration: 0.4ms | Allocations: 339)
+Completed 200 OK in 29ms (Views: 3.6ms | ActiveRecord: 0.0ms | Allocations: 12100)
+
+
+Started GET "/" for 127.0.0.1 at 2025-07-19 12:16:38 -0700
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /opt/homebrew/lib/ruby/gems/3.4.0/gems/railties-7.1.5.1/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /opt/homebrew/lib/ruby/gems/3.4.0/gems/railties-7.1.5.1/lib/rails/templates/rails/welcome/index.html.erb (Duration: 0.2ms | Allocations: 13)
+Completed 200 OK in 1ms (Views: 0.8ms | ActiveRecord: 0.0ms | Allocations: 144)
+
+
+Started POST "/api/v1/projects" for 127.0.0.1 at 2025-07-19 15:31:39 -0700
+DEPRECATION WARNING: Passing the class as positional argument is deprecated and will be removed in Rails 7.2.
+
+Please pass the class as a keyword argument:
+
+  serialize :tech_stack, type: Array
+ (called from <class:Project> at /Users/jacobbutler/CascadeProjects/windsurf-project/cerridwen/app/models/project.rb:10)
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project" => {"name" => "Vibe Project - 7/19/2025", "description" => "It's a little of this, a little of that. A pretty great app.", "tech_stack" => ["Ruby on Rails", "Fly.io"], "dev_identity" => "vibe_coder", "requirements_content" => ""}}
+Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms | Allocations: 279)
+
+
+  
+NoMethodError (undefined method 'authenticate_user!' for an instance of Api::V1::ProjectsController):
+  
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:403:in 'block in ActiveSupport::Callbacks::CallTemplate::MethodCall#make_lambda'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:183:in 'block (2 levels) in ActiveSupport::Callbacks::Filters::Before.halting_and_conditional'
+actionpack (7.1.5.1) lib/abstract_controller/callbacks.rb:34:in 'block (2 levels) in <module:Callbacks>'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:184:in 'block in ActiveSupport::Callbacks::Filters::Before.halting_and_conditional'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'block in ActiveSupport::Callbacks::CallbackSequence#invoke_before'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'Array#each'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'ActiveSupport::Callbacks::CallbackSequence#invoke_before'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:109:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (7.1.5.1) lib/abstract_controller/callbacks.rb:258:in 'AbstractController::Callbacks#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/rescue.rb:25:in 'ActionController::Rescue#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/instrumentation.rb:74:in 'block in ActionController::Instrumentation#process_action'
+activesupport (7.1.5.1) lib/active_support/notifications.rb:206:in 'block in ActiveSupport::Notifications.instrument'
+activesupport (7.1.5.1) lib/active_support/notifications/instrumenter.rb:58:in 'ActiveSupport::Notifications::Instrumenter#instrument'
+activesupport (7.1.5.1) lib/active_support/notifications.rb:206:in 'ActiveSupport::Notifications.instrument'
+actionpack (7.1.5.1) lib/action_controller/metal/instrumentation.rb:73:in 'ActionController::Instrumentation#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/params_wrapper.rb:261:in 'ActionController::ParamsWrapper#process_action'
+activerecord (7.1.5.1) lib/active_record/railties/controller_runtime.rb:32:in 'ActiveRecord::Railties::ControllerRuntime#process_action'
+actionpack (7.1.5.1) lib/abstract_controller/base.rb:160:in 'AbstractController::Base#process'
+actionpack (7.1.5.1) lib/action_controller/metal.rb:227:in 'ActionController::Metal#dispatch'
+actionpack (7.1.5.1) lib/action_controller/metal.rb:309:in 'ActionController::Metal.dispatch'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:49:in 'ActionDispatch::Routing::RouteSet::Dispatcher#dispatch'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:32:in 'ActionDispatch::Routing::RouteSet::Dispatcher#serve'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:51:in 'block in ActionDispatch::Journey::Router#serve'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:131:in 'block in ActionDispatch::Journey::Router#find_routes'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:124:in 'Array#each'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:124:in 'ActionDispatch::Journey::Router#find_routes'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:32:in 'ActionDispatch::Journey::Router#serve'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:882:in 'ActionDispatch::Routing::RouteSet#call'
+warden (1.2.9) lib/warden/manager.rb:36:in 'block in Warden::Manager#call'
+warden (1.2.9) lib/warden/manager.rb:34:in 'Kernel#catch'
+warden (1.2.9) lib/warden/manager.rb:34:in 'Warden::Manager#call'
+rack (3.1.16) lib/rack/etag.rb:29:in 'Rack::ETag#call'
+rack (3.1.16) lib/rack/conditional_get.rb:43:in 'Rack::ConditionalGet#call'
+rack (3.1.16) lib/rack/head.rb:15:in 'Rack::Head#call'
+activerecord (7.1.5.1) lib/active_record/migration.rb:655:in 'ActiveRecord::Migration::CheckPending#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/callbacks.rb:29:in 'block in ActionDispatch::Callbacks#call'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:101:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/callbacks.rb:28:in 'ActionDispatch::Callbacks#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/executor.rb:14:in 'ActionDispatch::Executor#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/actionable_exceptions.rb:16:in 'ActionDispatch::ActionableExceptions#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/debug_exceptions.rb:29:in 'ActionDispatch::DebugExceptions#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/show_exceptions.rb:31:in 'ActionDispatch::ShowExceptions#call'
+railties (7.1.5.1) lib/rails/rack/logger.rb:37:in 'Rails::Rack::Logger#call_app'
+railties (7.1.5.1) lib/rails/rack/logger.rb:24:in 'block in Rails::Rack::Logger#call'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:139:in 'block in ActiveSupport::TaggedLogging#tagged'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:39:in 'ActiveSupport::TaggedLogging::Formatter#tagged'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:139:in 'ActiveSupport::TaggedLogging#tagged'
+activesupport (7.1.5.1) lib/active_support/broadcast_logger.rb:241:in 'ActiveSupport::BroadcastLogger#method_missing'
+railties (7.1.5.1) lib/rails/rack/logger.rb:24:in 'Rails::Rack::Logger#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/remote_ip.rb:92:in 'ActionDispatch::RemoteIp#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/request_id.rb:28:in 'ActionDispatch::RequestId#call'
+rack (3.1.16) lib/rack/runtime.rb:24:in 'Rack::Runtime#call'
+activesupport (7.1.5.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in 'ActiveSupport::Cache::Strategy::LocalCache::Middleware#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:59:in 'block in ActionDispatch::ServerTiming#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:24:in 'ActionDispatch::ServerTiming::Subscriber#collect_events'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:58:in 'ActionDispatch::ServerTiming#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/executor.rb:14:in 'ActionDispatch::Executor#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/static.rb:25:in 'ActionDispatch::Static#call'
+rack (3.1.16) lib/rack/sendfile.rb:114:in 'Rack::Sendfile#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/host_authorization.rb:141:in 'ActionDispatch::HostAuthorization#call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in 'Rack::Cors#call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in 'Rack::Cors#call'
+railties (7.1.5.1) lib/rails/engine.rb:536:in 'Rails::Engine#call'
+puma (6.6.0) lib/puma/configuration.rb:279:in 'Puma::Configuration::ConfigMiddleware#call'
+puma (6.6.0) lib/puma/request.rb:99:in 'block in Puma::Request#handle_request'
+puma (6.6.0) lib/puma/thread_pool.rb:390:in 'Puma::ThreadPool#with_force_shutdown'
+puma (6.6.0) lib/puma/request.rb:98:in 'Puma::Request#handle_request'
+puma (6.6.0) lib/puma/server.rb:472:in 'Puma::Server#process_client'
+puma (6.6.0) lib/puma/server.rb:254:in 'block in Puma::Server#run'
+puma (6.6.0) lib/puma/thread_pool.rb:167:in 'block in Puma::ThreadPool#spawn_thread'
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
+Started GET "/api/v1/projects" for 127.0.0.1 at 2025-07-19 16:07:40 -0700
+Processing by Api::V1::ProjectsController#index as */*
+Completed 500 Internal Server Error in 6ms (ActiveRecord: 0.0ms | Allocations: 233)
+
+
+  
+NoMethodError (undefined method 'authenticate_user!' for an instance of Api::V1::ProjectsController):
+  
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:403:in 'block in ActiveSupport::Callbacks::CallTemplate::MethodCall#make_lambda'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:183:in 'block (2 levels) in ActiveSupport::Callbacks::Filters::Before.halting_and_conditional'
+actionpack (7.1.5.1) lib/abstract_controller/callbacks.rb:34:in 'block (2 levels) in <module:Callbacks>'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:184:in 'block in ActiveSupport::Callbacks::Filters::Before.halting_and_conditional'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'block in ActiveSupport::Callbacks::CallbackSequence#invoke_before'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'Array#each'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'ActiveSupport::Callbacks::CallbackSequence#invoke_before'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:109:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (7.1.5.1) lib/abstract_controller/callbacks.rb:258:in 'AbstractController::Callbacks#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/rescue.rb:25:in 'ActionController::Rescue#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/instrumentation.rb:74:in 'block in ActionController::Instrumentation#process_action'
+activesupport (7.1.5.1) lib/active_support/notifications.rb:206:in 'block in ActiveSupport::Notifications.instrument'
+activesupport (7.1.5.1) lib/active_support/notifications/instrumenter.rb:58:in 'ActiveSupport::Notifications::Instrumenter#instrument'
+activesupport (7.1.5.1) lib/active_support/notifications.rb:206:in 'ActiveSupport::Notifications.instrument'
+actionpack (7.1.5.1) lib/action_controller/metal/instrumentation.rb:73:in 'ActionController::Instrumentation#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/params_wrapper.rb:261:in 'ActionController::ParamsWrapper#process_action'
+activerecord (7.1.5.1) lib/active_record/railties/controller_runtime.rb:32:in 'ActiveRecord::Railties::ControllerRuntime#process_action'
+actionpack (7.1.5.1) lib/abstract_controller/base.rb:160:in 'AbstractController::Base#process'
+actionpack (7.1.5.1) lib/action_controller/metal.rb:227:in 'ActionController::Metal#dispatch'
+actionpack (7.1.5.1) lib/action_controller/metal.rb:309:in 'ActionController::Metal.dispatch'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:49:in 'ActionDispatch::Routing::RouteSet::Dispatcher#dispatch'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:32:in 'ActionDispatch::Routing::RouteSet::Dispatcher#serve'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:51:in 'block in ActionDispatch::Journey::Router#serve'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:131:in 'block in ActionDispatch::Journey::Router#find_routes'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:124:in 'Array#each'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:124:in 'ActionDispatch::Journey::Router#find_routes'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:32:in 'ActionDispatch::Journey::Router#serve'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:882:in 'ActionDispatch::Routing::RouteSet#call'
+warden (1.2.9) lib/warden/manager.rb:36:in 'block in Warden::Manager#call'
+warden (1.2.9) lib/warden/manager.rb:34:in 'Kernel#catch'
+warden (1.2.9) lib/warden/manager.rb:34:in 'Warden::Manager#call'
+rack (3.1.16) lib/rack/etag.rb:29:in 'Rack::ETag#call'
+rack (3.1.16) lib/rack/conditional_get.rb:31:in 'Rack::ConditionalGet#call'
+rack (3.1.16) lib/rack/head.rb:15:in 'Rack::Head#call'
+activerecord (7.1.5.1) lib/active_record/migration.rb:655:in 'ActiveRecord::Migration::CheckPending#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/callbacks.rb:29:in 'block in ActionDispatch::Callbacks#call'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:101:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/callbacks.rb:28:in 'ActionDispatch::Callbacks#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/executor.rb:14:in 'ActionDispatch::Executor#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/actionable_exceptions.rb:16:in 'ActionDispatch::ActionableExceptions#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/debug_exceptions.rb:29:in 'ActionDispatch::DebugExceptions#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/show_exceptions.rb:31:in 'ActionDispatch::ShowExceptions#call'
+railties (7.1.5.1) lib/rails/rack/logger.rb:37:in 'Rails::Rack::Logger#call_app'
+railties (7.1.5.1) lib/rails/rack/logger.rb:24:in 'block in Rails::Rack::Logger#call'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:139:in 'block in ActiveSupport::TaggedLogging#tagged'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:39:in 'ActiveSupport::TaggedLogging::Formatter#tagged'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:139:in 'ActiveSupport::TaggedLogging#tagged'
+activesupport (7.1.5.1) lib/active_support/broadcast_logger.rb:241:in 'ActiveSupport::BroadcastLogger#method_missing'
+railties (7.1.5.1) lib/rails/rack/logger.rb:24:in 'Rails::Rack::Logger#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/remote_ip.rb:92:in 'ActionDispatch::RemoteIp#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/request_id.rb:28:in 'ActionDispatch::RequestId#call'
+rack (3.1.16) lib/rack/runtime.rb:24:in 'Rack::Runtime#call'
+activesupport (7.1.5.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in 'ActiveSupport::Cache::Strategy::LocalCache::Middleware#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:59:in 'block in ActionDispatch::ServerTiming#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:24:in 'ActionDispatch::ServerTiming::Subscriber#collect_events'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:58:in 'ActionDispatch::ServerTiming#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/executor.rb:14:in 'ActionDispatch::Executor#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/static.rb:25:in 'ActionDispatch::Static#call'
+rack (3.1.16) lib/rack/sendfile.rb:114:in 'Rack::Sendfile#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/host_authorization.rb:141:in 'ActionDispatch::HostAuthorization#call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in 'Rack::Cors#call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in 'Rack::Cors#call'
+railties (7.1.5.1) lib/rails/engine.rb:536:in 'Rails::Engine#call'
+puma (6.6.0) lib/puma/configuration.rb:279:in 'Puma::Configuration::ConfigMiddleware#call'
+puma (6.6.0) lib/puma/request.rb:99:in 'block in Puma::Request#handle_request'
+puma (6.6.0) lib/puma/thread_pool.rb:390:in 'Puma::ThreadPool#with_force_shutdown'
+puma (6.6.0) lib/puma/request.rb:98:in 'Puma::Request#handle_request'
+puma (6.6.0) lib/puma/server.rb:472:in 'Puma::Server#process_client'
+puma (6.6.0) lib/puma/server.rb:254:in 'block in Puma::Server#run'
+puma (6.6.0) lib/puma/thread_pool.rb:167:in 'block in Puma::ThreadPool#spawn_thread'
+Started GET "/api/v1/projects" for 127.0.0.1 at 2025-07-19 16:08:27 -0700
+Processing by Api::V1::ProjectsController#index as */*
+Completed 500 Internal Server Error in 5ms (ActiveRecord: 0.0ms | Allocations: 171)
+
+
+  
+NoMethodError (undefined method 'authenticate_user!' for an instance of Api::V1::ProjectsController):
+  
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:403:in 'block in ActiveSupport::Callbacks::CallTemplate::MethodCall#make_lambda'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:183:in 'block (2 levels) in ActiveSupport::Callbacks::Filters::Before.halting_and_conditional'
+actionpack (7.1.5.1) lib/abstract_controller/callbacks.rb:34:in 'block (2 levels) in <module:Callbacks>'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:184:in 'block in ActiveSupport::Callbacks::Filters::Before.halting_and_conditional'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'block in ActiveSupport::Callbacks::CallbackSequence#invoke_before'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'Array#each'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:598:in 'ActiveSupport::Callbacks::CallbackSequence#invoke_before'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:109:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (7.1.5.1) lib/abstract_controller/callbacks.rb:258:in 'AbstractController::Callbacks#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/rescue.rb:25:in 'ActionController::Rescue#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/instrumentation.rb:74:in 'block in ActionController::Instrumentation#process_action'
+activesupport (7.1.5.1) lib/active_support/notifications.rb:206:in 'block in ActiveSupport::Notifications.instrument'
+activesupport (7.1.5.1) lib/active_support/notifications/instrumenter.rb:58:in 'ActiveSupport::Notifications::Instrumenter#instrument'
+activesupport (7.1.5.1) lib/active_support/notifications.rb:206:in 'ActiveSupport::Notifications.instrument'
+actionpack (7.1.5.1) lib/action_controller/metal/instrumentation.rb:73:in 'ActionController::Instrumentation#process_action'
+actionpack (7.1.5.1) lib/action_controller/metal/params_wrapper.rb:261:in 'ActionController::ParamsWrapper#process_action'
+activerecord (7.1.5.1) lib/active_record/railties/controller_runtime.rb:32:in 'ActiveRecord::Railties::ControllerRuntime#process_action'
+actionpack (7.1.5.1) lib/abstract_controller/base.rb:160:in 'AbstractController::Base#process'
+actionpack (7.1.5.1) lib/action_controller/metal.rb:227:in 'ActionController::Metal#dispatch'
+actionpack (7.1.5.1) lib/action_controller/metal.rb:309:in 'ActionController::Metal.dispatch'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:49:in 'ActionDispatch::Routing::RouteSet::Dispatcher#dispatch'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:32:in 'ActionDispatch::Routing::RouteSet::Dispatcher#serve'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:51:in 'block in ActionDispatch::Journey::Router#serve'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:131:in 'block in ActionDispatch::Journey::Router#find_routes'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:124:in 'Array#each'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:124:in 'ActionDispatch::Journey::Router#find_routes'
+actionpack (7.1.5.1) lib/action_dispatch/journey/router.rb:32:in 'ActionDispatch::Journey::Router#serve'
+actionpack (7.1.5.1) lib/action_dispatch/routing/route_set.rb:882:in 'ActionDispatch::Routing::RouteSet#call'
+warden (1.2.9) lib/warden/manager.rb:36:in 'block in Warden::Manager#call'
+warden (1.2.9) lib/warden/manager.rb:34:in 'Kernel#catch'
+warden (1.2.9) lib/warden/manager.rb:34:in 'Warden::Manager#call'
+rack (3.1.16) lib/rack/etag.rb:29:in 'Rack::ETag#call'
+rack (3.1.16) lib/rack/conditional_get.rb:31:in 'Rack::ConditionalGet#call'
+rack (3.1.16) lib/rack/head.rb:15:in 'Rack::Head#call'
+activerecord (7.1.5.1) lib/active_record/migration.rb:655:in 'ActiveRecord::Migration::CheckPending#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/callbacks.rb:29:in 'block in ActionDispatch::Callbacks#call'
+activesupport (7.1.5.1) lib/active_support/callbacks.rb:101:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/callbacks.rb:28:in 'ActionDispatch::Callbacks#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/executor.rb:14:in 'ActionDispatch::Executor#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/actionable_exceptions.rb:16:in 'ActionDispatch::ActionableExceptions#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/debug_exceptions.rb:29:in 'ActionDispatch::DebugExceptions#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/show_exceptions.rb:31:in 'ActionDispatch::ShowExceptions#call'
+railties (7.1.5.1) lib/rails/rack/logger.rb:37:in 'Rails::Rack::Logger#call_app'
+railties (7.1.5.1) lib/rails/rack/logger.rb:24:in 'block in Rails::Rack::Logger#call'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:139:in 'block in ActiveSupport::TaggedLogging#tagged'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:39:in 'ActiveSupport::TaggedLogging::Formatter#tagged'
+activesupport (7.1.5.1) lib/active_support/tagged_logging.rb:139:in 'ActiveSupport::TaggedLogging#tagged'
+activesupport (7.1.5.1) lib/active_support/broadcast_logger.rb:241:in 'ActiveSupport::BroadcastLogger#method_missing'
+railties (7.1.5.1) lib/rails/rack/logger.rb:24:in 'Rails::Rack::Logger#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/remote_ip.rb:92:in 'ActionDispatch::RemoteIp#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/request_id.rb:28:in 'ActionDispatch::RequestId#call'
+rack (3.1.16) lib/rack/runtime.rb:24:in 'Rack::Runtime#call'
+activesupport (7.1.5.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in 'ActiveSupport::Cache::Strategy::LocalCache::Middleware#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:59:in 'block in ActionDispatch::ServerTiming#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:24:in 'ActionDispatch::ServerTiming::Subscriber#collect_events'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/server_timing.rb:58:in 'ActionDispatch::ServerTiming#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/executor.rb:14:in 'ActionDispatch::Executor#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/static.rb:25:in 'ActionDispatch::Static#call'
+rack (3.1.16) lib/rack/sendfile.rb:114:in 'Rack::Sendfile#call'
+actionpack (7.1.5.1) lib/action_dispatch/middleware/host_authorization.rb:141:in 'ActionDispatch::HostAuthorization#call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in 'Rack::Cors#call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in 'Rack::Cors#call'
+railties (7.1.5.1) lib/rails/engine.rb:536:in 'Rails::Engine#call'
+puma (6.6.0) lib/puma/configuration.rb:279:in 'Puma::Configuration::ConfigMiddleware#call'
+puma (6.6.0) lib/puma/request.rb:99:in 'block in Puma::Request#handle_request'
+puma (6.6.0) lib/puma/thread_pool.rb:390:in 'Puma::ThreadPool#with_force_shutdown'
+puma (6.6.0) lib/puma/request.rb:98:in 'Puma::Request#handle_request'
+puma (6.6.0) lib/puma/server.rb:472:in 'Puma::Server#process_client'
+puma (6.6.0) lib/puma/server.rb:254:in 'block in Puma::Server#run'
+puma (6.6.0) lib/puma/thread_pool.rb:167:in 'block in Puma::ThreadPool#spawn_thread'
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
+Started GET "/api/v1/projects" for ::1 at 2025-07-19 16:13:14 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (1.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Api::V1::ProjectsController#index as */*
+Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+NoMethodError (undefined method `authenticate_user!' for #<Api::V1::ProjectsController:0x0000000000cad0>):
+  
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:109:in `run_callbacks'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2.1) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2.1) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2.1) lib/abstract_controller/base.rb:163:in `process'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:896:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.1.16) lib/rack/etag.rb:29:in `call'
+rack (3.1.16) lib/rack/conditional_get.rb:31:in `call'
+rack (3.1.16) lib/rack/head.rb:15:in `call'
+activerecord (7.2.2.1) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2.1) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2.1) lib/rails/rack/logger.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.16) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.16) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+railties (7.2.2.1) lib/rails/engine.rb:535:in `call'
+puma (6.6.0) lib/puma/configuration.rb:279:in `call'
+puma (6.6.0) lib/puma/request.rb:99:in `block in handle_request'
+puma (6.6.0) lib/puma/thread_pool.rb:390:in `with_force_shutdown'
+puma (6.6.0) lib/puma/request.rb:98:in `handle_request'
+puma (6.6.0) lib/puma/server.rb:472:in `process_client'
+puma (6.6.0) lib/puma/server.rb:254:in `block in run'
+puma (6.6.0) lib/puma/thread_pool.rb:167:in `block in spawn_thread'
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:13:25 -0700
+  
+ArgumentError (wrong number of arguments (given 2, expected 1)):
+  
+app/models/project.rb:10:in `<class:Project>'
+app/models/project.rb:1:in `<top (required)>'
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:14:07 -0700
+Processing by Api::V1::ProjectsController#create as */*
+  Parameters: {"project"=>{"name"=>"Test Project", "description"=>"A test project for AI rules", "tech_stack"=>["React", "Rails"], "dev_identity"=>"vibe_coder"}}
+Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+NoMethodError (undefined method `authenticate_user!' for #<Api::V1::ProjectsController:0x00000000012f48>):
+  
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:109:in `run_callbacks'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2.1) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2.1) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2.1) lib/abstract_controller/base.rb:163:in `process'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:896:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.1.16) lib/rack/etag.rb:29:in `call'
+rack (3.1.16) lib/rack/conditional_get.rb:43:in `call'
+rack (3.1.16) lib/rack/head.rb:15:in `call'
+activerecord (7.2.2.1) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2.1) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2.1) lib/rails/rack/logger.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.16) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.16) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+railties (7.2.2.1) lib/rails/engine.rb:535:in `call'
+puma (6.6.0) lib/puma/configuration.rb:279:in `call'
+puma (6.6.0) lib/puma/request.rb:99:in `block in handle_request'
+puma (6.6.0) lib/puma/thread_pool.rb:390:in `with_force_shutdown'
+puma (6.6.0) lib/puma/request.rb:98:in `handle_request'
+puma (6.6.0) lib/puma/server.rb:472:in `process_client'
+puma (6.6.0) lib/puma/server.rb:254:in `block in run'
+puma (6.6.0) lib/puma/thread_pool.rb:167:in `block in spawn_thread'
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:15:00 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Api::V1::ProjectsController#create as */*
+  Parameters: {"project"=>{"name"=>"Test Project", "description"=>"A test project for AI rules", "tech_stack"=>["React", "Rails"], "dev_identity"=>"vibe_coder"}}
+Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+NoMethodError (undefined method `authenticate_user!' for #<Api::V1::ProjectsController:0x0000000000caf8>):
+  
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:109:in `run_callbacks'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2.1) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2.1) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2.1) lib/abstract_controller/base.rb:163:in `process'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:896:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.1.16) lib/rack/etag.rb:29:in `call'
+rack (3.1.16) lib/rack/conditional_get.rb:43:in `call'
+rack (3.1.16) lib/rack/head.rb:15:in `call'
+activerecord (7.2.2.1) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2.1) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2.1) lib/rails/rack/logger.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.16) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.16) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+railties (7.2.2.1) lib/rails/engine.rb:535:in `call'
+puma (6.6.0) lib/puma/configuration.rb:279:in `call'
+puma (6.6.0) lib/puma/request.rb:99:in `block in handle_request'
+puma (6.6.0) lib/puma/thread_pool.rb:390:in `with_force_shutdown'
+puma (6.6.0) lib/puma/request.rb:98:in `handle_request'
+puma (6.6.0) lib/puma/server.rb:472:in `process_client'
+puma (6.6.0) lib/puma/server.rb:254:in `block in run'
+puma (6.6.0) lib/puma/thread_pool.rb:167:in `block in spawn_thread'
+Started GET "/" for ::1 at 2025-07-19 16:15:22 -0700
+Processing by Rails::WelcomeController#index as */*
+  Rendering /Users/jacobbutler/.rvm/gems/ruby-3.2.2/gems/railties-7.2.2.1/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /Users/jacobbutler/.rvm/gems/ruby-3.2.2/gems/railties-7.2.2.1/lib/rails/templates/rails/welcome/index.html.erb (Duration: 0.7ms | GC: 0.0ms)
+Completed 200 OK in 45ms (Views: 5.7ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 12.6ms)
+
+
+Started GET "/api/v1/projects" for ::1 at 2025-07-19 16:15:30 -0700
+Processing by Api::V1::ProjectsController#index as JSON
+Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+NoMethodError (undefined method `authenticate_user!' for #<Api::V1::ProjectsController:0x0000000000cd78>):
+  
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:109:in `run_callbacks'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2.1) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2.1) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2.1) lib/abstract_controller/base.rb:163:in `process'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:896:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.1.16) lib/rack/etag.rb:29:in `call'
+rack (3.1.16) lib/rack/conditional_get.rb:31:in `call'
+rack (3.1.16) lib/rack/head.rb:15:in `call'
+activerecord (7.2.2.1) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2.1) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2.1) lib/rails/rack/logger.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.16) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.16) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+railties (7.2.2.1) lib/rails/engine.rb:535:in `call'
+puma (6.6.0) lib/puma/configuration.rb:279:in `call'
+puma (6.6.0) lib/puma/request.rb:99:in `block in handle_request'
+puma (6.6.0) lib/puma/thread_pool.rb:390:in `with_force_shutdown'
+puma (6.6.0) lib/puma/request.rb:98:in `handle_request'
+puma (6.6.0) lib/puma/server.rb:472:in `process_client'
+puma (6.6.0) lib/puma/server.rb:254:in `block in run'
+puma (6.6.0) lib/puma/thread_pool.rb:167:in `block in spawn_thread'
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:16:16 -0700
+Processing by Api::V1::ProjectsController#create as */*
+  Parameters: {"project"=>{"name"=>"Test Project", "description"=>"A test project for AI rules", "tech_stack"=>["React", "Rails"], "dev_identity"=>"vibe_coder"}}
+Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.1ms)
+
+
+  
+NoMethodError (undefined method `authenticate_user!' for #<Api::V1::ProjectsController:0x000000000130b0>):
+  
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:362:in `block in make_lambda'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:179:in `block in call'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:34:in `block (2 levels) in <module:Callbacks>'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:180:in `call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `block in invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `each'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:559:in `invoke_before'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:109:in `run_callbacks'
+actionpack (7.2.2.1) lib/abstract_controller/callbacks.rb:260:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/rescue.rb:27:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:77:in `block in process_action'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `block in instrument'
+activesupport (7.2.2.1) lib/active_support/notifications/instrumenter.rb:58:in `instrument'
+activesupport (7.2.2.1) lib/active_support/notifications.rb:210:in `instrument'
+actionpack (7.2.2.1) lib/action_controller/metal/instrumentation.rb:76:in `process_action'
+actionpack (7.2.2.1) lib/action_controller/metal/params_wrapper.rb:259:in `process_action'
+activerecord (7.2.2.1) lib/active_record/railties/controller_runtime.rb:39:in `process_action'
+actionpack (7.2.2.1) lib/abstract_controller/base.rb:163:in `process'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:252:in `dispatch'
+actionpack (7.2.2.1) lib/action_controller/metal.rb:335:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:67:in `dispatch'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:50:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:53:in `block in serve'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:133:in `block in find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `each'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:126:in `find_routes'
+actionpack (7.2.2.1) lib/action_dispatch/journey/router.rb:34:in `serve'
+actionpack (7.2.2.1) lib/action_dispatch/routing/route_set.rb:896:in `call'
+warden (1.2.9) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.9) lib/warden/manager.rb:34:in `catch'
+warden (1.2.9) lib/warden/manager.rb:34:in `call'
+rack (3.1.16) lib/rack/etag.rb:29:in `call'
+rack (3.1.16) lib/rack/conditional_get.rb:43:in `call'
+rack (3.1.16) lib/rack/head.rb:15:in `call'
+activerecord (7.2.2.1) lib/active_record/migration.rb:674:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:31:in `block in call'
+activesupport (7.2.2.1) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/callbacks.rb:30:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in `call'
+railties (7.2.2.1) lib/rails/rack/logger.rb:41:in `call_app'
+railties (7.2.2.1) lib/rails/rack/logger.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/remote_ip.rb:96:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/request_id.rb:33:in `call'
+rack (3.1.16) lib/rack/runtime.rb:24:in `call'
+activesupport (7.2.2.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/executor.rb:16:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/static.rb:27:in `call'
+rack (3.1.16) lib/rack/sendfile.rb:114:in `call'
+actionpack (7.2.2.1) lib/action_dispatch/middleware/host_authorization.rb:143:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in `call'
+railties (7.2.2.1) lib/rails/engine.rb:535:in `call'
+puma (6.6.0) lib/puma/configuration.rb:279:in `call'
+puma (6.6.0) lib/puma/request.rb:99:in `block in handle_request'
+puma (6.6.0) lib/puma/thread_pool.rb:390:in `with_force_shutdown'
+puma (6.6.0) lib/puma/request.rb:98:in `handle_request'
+puma (6.6.0) lib/puma/server.rb:472:in `process_client'
+puma (6.6.0) lib/puma/server.rb:254:in `block in run'
+puma (6.6.0) lib/puma/thread_pool.rb:167:in `block in spawn_thread'
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:16:40 -0700
+Processing by Api::V1::ProjectsController#create as */*
+  Parameters: {"project"=>{"name"=>"Test Project", "description"=>"A test project for AI rules", "tech_stack"=>["React", "Rails"], "dev_identity"=>"vibe_coder"}}
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:16:in `create'
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:16:in `create'
+Completed 422 Unprocessable Content in 96ms (Views: 0.1ms | ActiveRecord: 69.2ms (0 queries, 0 cached) | GC: 0.2ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:17:03 -0700
+Processing by Api::V1::ProjectsController#create as */*
+  Parameters: {"project"=>{"name"=>"Test Project", "description"=>"A test project for AI rules", "tech_stack"=>["React", "Rails"], "dev_identity"=>"vibe_coder"}}
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:16:in `create'
+  [1m[36mProject Create (24.4ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", nil], ["name", "Test Project"], ["description", "A test project for AI rules"], ["tech_stack", "[\"React\",\"Rails\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:17:04.100325"], ["updated_at", "2025-07-19 23:17:04.100325"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:16:in `create'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:16:in `create'
+Completed 500 Internal Server Error in 318ms (ActiveRecord: 188.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+  
+ActiveRecord::NotNullViolation (PG::NotNullViolation: ERROR:  null value in column "user_id" of relation "projects" violates not-null constraint
+DETAIL:  Failing row contains (2, null, Test Project, A test project for AI rules, ["React","Rails"], vibe_coder, null, 2025-07-19 23:17:04.100325, 2025-07-19 23:17:04.100325).
+):
+
+Causes:
+PG::NotNullViolation (ERROR:  null value in column "user_id" of relation "projects" violates not-null constraint
+DETAIL:  Failing row contains (2, null, Test Project, A test project for AI rules, ["React","Rails"], vibe_coder, null, 2025-07-19 23:17:04.100325, 2025-07-19 23:17:04.100325).
+)
+  
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists? (4.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[36mCACHE User Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:17:31 -0700
+Processing by Api::V1::ProjectsController#create as */*
+  Parameters: {"project"=>{"name"=>"Test Project", "description"=>"A test project for AI rules", "tech_stack"=>["React", "Rails"], "dev_identity"=>"vibe_coder"}}
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (3.9ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Test Project"], ["description", "A test project for AI rules"], ["tech_stack", "[\"React\",\"Rails\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:17:31.778071"], ["updated_at", "2025-07-19 23:17:31.778071"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (3.9ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 3], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 99ms (Views: 0.2ms | ActiveRecord: 45.7ms (3 queries, 0 cached) | GC: 0.8ms)
+
+
+Started POST "/api/v1/projects/3/generate_ruleset" for ::1 at 2025-07-19 16:17:42 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as */*
+  Parameters: {"id"=>"3", "project"=>{}}
+  [1m[36mProject Load (0.9ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:74:in `set_project'
+Completed 500 Internal Server Error in 14ms (ActiveRecord: 0.8ms (1 query, 0 cached) | GC: 1.4ms)
+
+
+  
+LoadError (cannot load such file -- ruby-openai):
+  
+app/services/active_agent_rules_service.rb:3:in `<top (required)>'
+app/controllers/api/v1/projects_controller.rb:40:in `generate_ruleset'
+Started POST "/api/v1/projects/3/generate_ruleset" for ::1 at 2025-07-19 16:18:12 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as */*
+  Parameters: {"id"=>"3", "project"=>{}}
+  [1m[36mProject Load (0.6ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:74:in `set_project'
+Failed to fetch community insights: undefined method `get_insights_for_technology' for #<AiRuleArchiveService:0x0000000106730418 @errors=[]>
+ActiveAgent ruleset generation failed: undefined method `requirements_content' for #<Project id: 3, user_id: 1, name: "Test Project", description: "A test project for AI rules", tech_stack: ["React", "Rails"], dev_identity: "vibe_coder", requirements_file_content: nil, created_at: "2025-07-19 23:17:31.778071000 +0000", updated_at: "2025-07-19 23:17:31.778071000 +0000">
+Completed 422 Unprocessable Content in 20ms (Views: 0.2ms | ActiveRecord: 10.1ms (1 query, 0 cached) | GC: 7.0ms)
+
+
+Started POST "/api/v1/projects/3/generate_ruleset" for ::1 at 2025-07-19 16:18:47 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as */*
+  Parameters: {"id"=>"3", "project"=>{}}
+  [1m[36mProject Load (1.6ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:74:in `set_project'
+Failed to fetch community insights: undefined method `get_insights_for_technology' for #<AiRuleArchiveService:0x0000000108db9300 @errors=[]>
+  [1m[36mRuleset Maximum (3.1ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 3]]
+  ↳ app/services/active_agent_rules_service.rb:258:in `create_ruleset'
+ActiveAgent ruleset generation failed: unknown attribute 'generated_at' for Ruleset.
+Completed 422 Unprocessable Content in 18280ms (Views: 0.3ms | ActiveRecord: 86.8ms (2 queries, 0 cached) | GC: 1.9ms)
+
+
+Started POST "/api/v1/projects/3/generate_ruleset" for ::1 at 2025-07-19 16:20:41 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as */*
+  Parameters: {"id"=>"3", "project"=>{}}
+  [1m[36mProject Load (0.8ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:74:in `set_project'
+Failed to fetch community insights: undefined method `get_insights_for_technology' for #<AiRuleArchiveService:0x0000000107d712b8 @errors=[]>
+  [1m[36mRuleset Maximum (0.6ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 3]]
+  ↳ app/services/active_agent_rules_service.rb:258:in `create_ruleset'
+ActiveAgent ruleset generation failed: unknown attribute 'metadata' for Ruleset.
+Completed 422 Unprocessable Content in 17140ms (Views: 1.7ms | ActiveRecord: 23.5ms (2 queries, 0 cached) | GC: 3.4ms)
+
+
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
+Started POST "/api/v1/projects/3/generate_ruleset" for ::1 at 2025-07-19 16:21:20 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as */*
+  Parameters: {"id"=>"3", "project"=>{}}
+  [1m[36mProject Load (0.5ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:74:in `set_project'
+Failed to fetch community insights: undefined method `get_insights_for_technology' for #<AiRuleArchiveService:0x00000001067d5c38 @errors=[]>
+  [1m[36mRuleset Maximum (0.8ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 3]]
+  ↳ app/services/active_agent_rules_service.rb:258:in `create_ruleset'
+  [1m[36mCACHE Ruleset Maximum (0.0ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 3]]
+  ↳ app/models/ruleset.rb:26:in `set_version'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Exists? (5.8ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 1], ["project_id", 3], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Exists? (7.0ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "10de7e27-8299-4054-9756-d83add2e9076"], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Create (7.5ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 3], ["content", "# 🎯 Personalized Coding Ruleset\n\n*Generated with AI assistance and community best practices*\n\n**Project**: A test project for AI rules\n**Developer Style**: Vibe coder\n**Tech Stack**: React, Rails\n**Generated**: July 19, 2025 at 11:21 PM\n\n---\n\n# Personalized Coding Ruleset for vibe_coder\n\nWelcome, vibe_coder! This ruleset is designed to align with your creative and flexible approach to coding. It's tailored to foster your experimentation while ensuring quality and maintainability in your React and Rails test project. Let's dive into each aspect:\n\n## 1. Code Style & Formatting\n\n### React\n- **Naming Conventions**:\n  - Components: `PascalCase` (e.g., `MyComponent`)\n  - Hooks and functions: `camelCase` (e.g., `useFetchData`)\n  - Variables: `camelCase` (e.g., `userName`)\n  - Files: `kebab-case` (e.g., `my-component.jsx`)\n\n- **Indentation & Spacing**:\n  - Use 2 spaces per indentation level.\n  - Place a single space inside curly braces: `{ example }`.\n\n- **Structure**:\n  - Keep components small and focused on a single responsibility.\n  - Leverage arrow functions for concise component definition:\n    ```jsx\n    const MyComponent = () => {\n      // component logic\n    };\n    ```\n\n### Rails\n- **Naming Conventions**:\n  - Models: `SingularPascalCase` (e.g., `User`)\n  - Controllers: `PluralPascalCase` (e.g., `UsersController`)\n  - Variables and methods: `snake_case` (e.g., `user_name`)\n  - Files: `snake_case` (e.g., `users_controller.rb`)\n\n- **Indentation & Spacing**:\n  - Use 2 spaces per indentation level.\n  - Avoid trailing whitespace.\n\n- **Structure**:\n  - Follow Rails conventions for MVC structure.\n  - Use RESTful routes and actions.\n\n## 2. Architecture & Design Patterns\n\n### Recommended Patterns\n- **React**:\n  - Use hooks for state and side-effects (`useState`, `useEffect`).\n  - Employ Context API for global state management.\n  - Favor composition over inheritance for components.\n\n- **Rails**:\n  - Utilize ActiveRecord for ORM.\n  - Follow RESTful design principles for controllers.\n  - Adhere to convention over configuration.\n\n### File Organization\n- **React**:\n  - Organize components by feature or route.\n  - Group related files (styles, tests) with components.\n\n- **Rails**:\n  - Maintain standard Rails directory structure.\n  - Keep business logic in models, not controllers or views.\n\n## 3. Best Practices\n\n### Error Handling\n- **React**:\n  - Use error boundaries to catch UI errors.\n  - Handle asynchronous errors with `try/catch`.\n\n- **Rails**:\n  - Use `rescue_from` in controllers for error handling.\n  - Validate data at the model level.\n\n### Performance Optimization\n- **React**:\n  - Utilize `React.memo` and `useMemo` for performance-heavy components.\n  - Lazy load components with `React.lazy`.\n\n- **Rails**:\n  - Use eager loading (`includes`) to avoid N+1 query problems.\n  - Cache expensive queries and partials.\n\n### Security Considerations\n- **React**:\n  - Sanitize user inputs and escape HTML to prevent XSS.\n  - Use environment variables for sensitive data.\n\n- **Rails**:\n  - Implement current best practices for CSRF and SQL injection prevention.\n  - Regularly update gems to patch security vulnerabilities.\n\n## 4. Testing Strategy\n\n### Frameworks and Approaches\n- **React**:\n  - Use Jest and React Testing Library for unit and integration tests.\n  - Focus on testing component behavior, not implementation details.\n\n- **Rails**:\n  - Use RSpec for comprehensive testing.\n  - Write tests for controllers, models, and views.\n\n### Coverage Expectations\n- Aim for at least 80% code coverage.\n- Prioritize coverage for critical components and business logic.\n\n### Test Organization\n- **React**: Co-locate tests with source files.\n- **Rails**: Follow Rails conventions for test directory structure.\n\n## 5. Documentation Standards\n\n### Code Commenting\n- Write meaningful comments for complex logic.\n- Avoid obvious comments; let the code be self-explanatory when possible.\n\n### README and Documentation\n- Provide clear setup instructions and project overview.\n- Include usage examples for key features.\n\n### API Documentation\n- Use tools like Swagger for documenting API endpoints.\n- Include request and response examples for each endpoint.\n\n## 6. Development Workflow\n\n### Git Workflow\n- Use feature branches for new work.\n- Write descriptive commit messages:\n  ```\n  feat: add user login functionality\n  fix: resolve issue with data fetching on main page\n  ```\n\n### Code Review\n- Check for adherence to this ruleset.\n- Ensure no major security vulnerabilities or performance issues.\n\n### Deployment\n- Use continuous integration for automated testing.\n- Deploy to staging before production for final checks.\n\n## 7. Technology-Specific Guidelines\n\n### Framework-Specific Best Practices\n- **React**:\n  - Keep the component tree shallow for better performance.\n  - Use `PropTypes` for runtime type checking.\n\n- **Rails**:\n  - Leverage `before_action` filters for shared logic in controllers.\n  - Use `scopes` in models for complex queries.\n\n### Library Usage\n- **React**: Use libraries like Axios for HTTP requests and styled-components for CSS-in-JS.\n- **Rails**: Rely on gems like Devise for authentication and Pundit for authorization.\n\n### Configuration Management\n- Use `.env` files for managing environment variables.\n- Keep sensitive configurations out of version control.\n\n---\n\nThis personalized coding ruleset is designed to support your creative coding style while maintaining a high standard of quality. Feel free to experiment and iterate within these guidelines, and happy coding!"], ["version", 1], ["is_public", false], ["uuid", "10de7e27-8299-4054-9756-d83add2e9076"], ["created_at", "2025-07-19 23:21:42.605371"], ["updated_at", "2025-07-19 23:21:42.605371"]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Load (0.4ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:43:in `generate_ruleset'
+Completed 500 Internal Server Error in 22187ms (ActiveRecord: 41.9ms (7 queries, 1 cached) | GC: 17.3ms)
+
+
+  
+NoMethodError (undefined method `generated_at' for #<Ruleset id: 2, project_id: 3, content: "# 🎯 Personalized Coding Ruleset\n\n*Generated with A...", version: 1, is_public: false, uuid: "10de7e27-8299-4054-9756-d83add2e9076", created_at: "2025-07-19 23:21:42.605371000 +0000", updated_at: "2025-07-19 23:21:42.605371000 +0000">):
+  
+app/controllers/api/v1/projects_controller.rb:53:in `generate_ruleset'
+Started POST "/api/v1/projects/3/generate_ruleset" for ::1 at 2025-07-19 16:22:12 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as */*
+  Parameters: {"id"=>"3", "project"=>{}}
+  [1m[36mProject Load (0.3ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:74:in `set_project'
+Failed to fetch community insights: undefined method `get_insights_for_technology' for #<AiRuleArchiveService:0x0000000108c9a910 @errors=[]>
+  [1m[36mRuleset Maximum (0.9ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 3]]
+  ↳ app/services/active_agent_rules_service.rb:258:in `create_ruleset'
+  [1m[36mCACHE Ruleset Maximum (0.0ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 3]]
+  ↳ app/models/ruleset.rb:26:in `set_version'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Exists? (1.4ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 2], ["project_id", 3], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "9e0df0e2-a178-419a-b647-fc2e09dc7d4d"], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Create (0.7ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 3], ["content", "# 🎯 Personalized Coding Ruleset\n\n*Generated with AI assistance and community best practices*\n\n**Project**: A test project for AI rules\n**Developer Style**: Vibe coder\n**Tech Stack**: React, Rails\n**Generated**: July 19, 2025 at 11:22 PM\n\n---\n\n# vibe_coder's Comprehensive Coding Ruleset\n\nWelcome, vibe_coder! This ruleset is designed to align with your creative and experimental coding style while ensuring your projects remain maintainable and scalable. Let's dive into the guidelines tailored for your React and Rails project.\n\n## 1. Code Style & Formatting\n\n### React\n- **Conventions**: Use functional components and hooks. Avoid class components unless absolutely necessary for legacy reasons.\n- **Naming**:\n  - Components: `PascalCase` (e.g., `MyComponent`)\n  - Hooks and functions: `camelCase` (e.g., `useCustomHook`)\n  - Files: `kebab-case.js` (e.g., `my-component.js`)\n- **Structure**: Aim for concise, expressive code.\n  - Indentation: 2 spaces\n  - Line Length: Aim for a maximum of 80 characters per line\n  - Use `const` and `let` over `var`\n\n### Rails\n- **Conventions**: Follow Rails conventions closely, leveraging the framework's opinionated nature.\n- **Naming**:\n  - Models: Singular `PascalCase` (e.g., `User`)\n  - Controllers: Plural `PascalCase` (e.g., `UsersController`)\n  - Database Tables: Plural `snake_case` (e.g., `users`)\n- **Structure**: Utilize Rails' directory structure.\n  - Indentation: 2 spaces\n  - Avoid deep nesting in views and helpers\n\n## 2. Architecture & Design Patterns\n\n### React\n- **Patterns**: Embrace component composition and hooks.\n  - Use Context API for global state management when Redux is overkill.\n  - Apply the Container-Presenter pattern for separating business logic from UI code.\n\n### Rails\n- **Patterns**: RESTful resourceful routes and MVC.\n  - Organize models, views, and controllers to adhere to the single responsibility principle.\n  - Use Service Objects for complex business logic outside controllers/models.\n\n## 3. Best Practices\n\n### Error Handling\n- **React**: Use `Error Boundaries` to catch runtime errors in components.\n- **Rails**: Leverage built-in exception handling; use custom error pages for user-friendly UX.\n\n### Performance Optimization\n- **React**: Use `React.memo` and `useMemo` to optimize re-renders.\n- **Rails**: Eager loading associations and caching with `Fragment Caching`.\n\n### Security Considerations\n- **React**: Sanitize user inputs and avoid dangerously setting HTML.\n- **Rails**: Use strong parameters, avoid mass assignments, and ensure CSRF protection.\n\n## 4. Testing Strategy\n\n### Frameworks\n- **React**: Use `Jest` and `React Testing Library` for unit and integration tests.\n- **Rails**: Use `RSpec` for comprehensive testing.\n\n### Coverage\n- Aim for at least 80% coverage on critical components and business logic.\n\n### Organization\n- Group tests by feature or module to maintain clarity and organization.\n\n## 5. Documentation Standards\n\n### Code Commenting\n- Use comments sparingly to explain complex logic but prefer self-explanatory code.\n\n### README\n- Provide an overview, setup instructions, and usage examples.\n- Keep it concise and updated with project changes.\n\n### API Documentation\n- Use tools like `Swagger` or `Rswag` for Rails to document APIs.\n\n## 6. Development Workflow\n\n### Git Workflow\n- Use `feature/`, `bugfix/`, and `hotfix/` branches.\n- Write clear commit messages: `type(scope): description` (e.g., `feat(login): add user authentication`).\n\n### Code Review\n- Ensure code is linted and tested before review.\n- Check for adherence to this ruleset and code quality.\n\n### Deployment\n- Automate deployments using CI/CD pipelines.\n- Ensure environment variables are managed securely.\n\n## 7. Technology-Specific Guidelines\n\n### React\n- Prefer `useState` and `useEffect` for state and side effects.\n- Use `PropTypes` for component prop validation.\n\n### Rails\n- Utilize ActiveRecord callbacks carefully to avoid complex side-effects.\n- Keep configuration in environment files and use Rails credentials for sensitive data.\n\n### Library Recommendations\n- React: Consider using `axios` for HTTP requests.\n- Rails: Use `Devise` for authentication needs.\n\nThis ruleset is a living document, designed to grow with your skills and project needs. Happy coding, and enjoy your creative coding journey!"], ["version", 2], ["is_public", false], ["uuid", "9e0df0e2-a178-419a-b647-fc2e09dc7d4d"], ["created_at", "2025-07-19 23:22:28.531732"], ["updated_at", "2025-07-19 23:22:28.531732"]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Load (0.6ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 3], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:43:in `generate_ruleset'
+Completed 201 Created in 16153ms (Views: 3.5ms | ActiveRecord: 24.1ms (7 queries, 1 cached) | GC: 0.0ms)
+
+
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:29:34 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (1.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Pro Project - 7/19/2025", "description"=>"It's a custom ruleset generator for AI coding assistants. It's pretty great.", "tech_stack"=>["Python", "Fly.io"], "dev_identity"=>"experienced_dev", "requirements_content"=>""}}
+  [1m[36mUser Load (1.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010ba11b00>, params: {"project"=>{"name"=>"Pro Project - 7/19/2025", "description"=>"It's a custom ruleset generator for AI coding assistants. It's pretty great.", "tech_stack"=>["Python", "Fly.io"], "dev_identity"=>"experienced_dev", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (2.6ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Pro Project - 7/19/2025"], ["description", "It's a custom ruleset generator for AI coding assistants. It's pretty great."], ["tech_stack", "[\"Python\",\"Fly.io\"]"], ["dev_identity", "experienced_dev"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:29:34.996619"], ["updated_at", "2025-07-19 23:29:34.996619"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (1.1ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 4], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 104ms (Views: 0.2ms | ActiveRecord: 49.3ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:29:46 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Pro Project - 7/19/2025", "description"=>"It's a custom ruleset generator for AI coding assistants. It's pretty great.", "tech_stack"=>["Python", "Fly.io"], "dev_identity"=>"experienced_dev", "requirements_content"=>""}}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010c5d8038>, params: {"project"=>{"name"=>"Pro Project - 7/19/2025", "description"=>"It's a custom ruleset generator for AI coding assistants. It's pretty great.", "tech_stack"=>["Python", "Fly.io"], "dev_identity"=>"experienced_dev", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (8.4ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Pro Project - 7/19/2025"], ["description", "It's a custom ruleset generator for AI coding assistants. It's pretty great."], ["tech_stack", "[\"Python\",\"Fly.io\"]"], ["dev_identity", "experienced_dev"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:29:46.411869"], ["updated_at", "2025-07-19 23:29:46.411869"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (0.8ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 5], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 26ms (Views: 1.9ms | ActiveRecord: 10.4ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:36:32 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.", "tech_stack"=>["Ruby on Rails", "Fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}}
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010c7901f0>, params: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.", "tech_stack"=>["Ruby on Rails", "Fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (2.5ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Vibe Project - 7/19/2025"], ["description", "A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset."], ["tech_stack", "[\"Ruby on Rails\",\"Fly.io\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:36:32.589684"], ["updated_at", "2025-07-19 23:36:32.589684"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (1.2ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 6], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 168ms (Views: 0.5ms | ActiveRecord: 44.7ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:36:54 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.", "tech_stack"=>["Ruby on Rails", "Fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}}
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010c8b7768>, params: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.", "tech_stack"=>["Ruby on Rails", "Fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (1.9ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Vibe Project - 7/19/2025"], ["description", "A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset."], ["tech_stack", "[\"Ruby on Rails\",\"Fly.io\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:36:54.658695"], ["updated_at", "2025-07-19 23:36:54.658695"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (0.4ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 7], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 13ms (Views: 0.2ms | ActiveRecord: 3.5ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:39:21 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["React", "Ruby on Rails", "fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}}
+  [1m[36mUser Load (2.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010c9ff8c8>, params: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["React", "Ruby on Rails", "fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (6.9ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Vibe Project - 7/19/2025"], ["description", "A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n"], ["tech_stack", "[\"React\",\"Ruby on Rails\",\"fly.io\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:39:21.763428"], ["updated_at", "2025-07-19 23:39:21.763428"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (1.2ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (1.3ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 8], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 46ms (Views: 1.0ms | ActiveRecord: 11.1ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/projects/8/generate_ruleset" for ::1 at 2025-07-19 16:39:21 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as JSON
+  Parameters: {"id"=>"8", "project"=>{}}
+  [1m[36mProject Load (2.7ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 8], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:74:in `set_project'
+Failed to fetch community insights: undefined method `get_insights_for_technology' for #<AiRuleArchiveService:0x00000001097de290 @errors=[]>
+  [1m[36mRuleset Maximum (2.2ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 8]]
+  ↳ app/services/active_agent_rules_service.rb:258:in `create_ruleset'
+  [1m[36mCACHE Ruleset Maximum (0.1ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 8]]
+  ↳ app/models/ruleset.rb:26:in `set_version'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Exists? (2.0ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 1], ["project_id", 8], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "56ccebb6-699d-460b-9a97-a0ab8f088c1e"], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Create (4.5ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 8], ["content", "# 🎯 Personalized Coding Ruleset\n\n*Generated with AI assistance and community best practices*\n\n**Project**: A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n...\n**Developer Style**: Vibe coder\n**Tech Stack**: React, Ruby on Rails, fly.io\n**Generated**: July 19, 2025 at 11:39 PM\n\n---\n\n# Personalized Coding Ruleset for vibe_coder\n\nWelcome to your personalized coding ruleset, vibe_coder! This guide is designed to support your creative and experimental coding style while ensuring the creation of robust and scalable applications. Dive in and enjoy the blend of creativity and structure!\n\n## 1. Code Style & Formatting\n\n### React (JavaScript/TypeScript)\n- **Indentation & Spacing**: Use 2 spaces for indentation. Keep lines under 80 characters for readability.\n- **Naming Conventions**:\n  - Variables and functions: `camelCase` (e.g., `fetchData`, `handleInputChange`).\n  - Components and classes: `PascalCase` (e.g., `MyComponent`, `UserCard`).\n  - Files: Use lowercase with dashes (e.g., `user-card.js`, `fetch-data.ts`).\n\n### Ruby on Rails\n- **Indentation & Spacing**: Use 2 spaces for indentation.\n- **Naming Conventions**:\n  - Variables and methods: `snake_case` (e.g., `user_profile`, `fetch_data`).\n  - Classes: `CamelCase` (e.g., `UserProfile`, `DataFetcher`).\n  - Files: Use `snake_case` for file names (e.g., `user_profile.rb`).\n\n## 2. Architecture & Design Patterns\n\n### React\n- **Component Composition**: Favor functional components with hooks for state management.\n- **Patterns**: Use the Container-Presenter pattern to separate logic from UI.\n- **File Organization**: Group related components and hooks within feature folders.\n\n### Ruby on Rails\n- **Patterns**: Follow RESTful conventions for controllers and routes.\n- **File Organization**: Maintain MVC separation; use services for business logic beyond models.\n- **Separation of Concerns**: Keep views slim; use helpers and partials to manage presentation logic.\n\n## 3. Best Practices\n\n### Error Handling\n- **React**: Use error boundaries to catch rendering errors in components.\n- **Rails**: Use custom error classes and rescue blocks to handle exceptions.\n\n### Performance Optimization\n- **React**: Use `React.memo` and `useCallback` to prevent unnecessary re-renders.\n- **Rails**: Use eager loading to avoid N+1 query problems.\n\n### Security Considerations\n- **React**: Sanitize user inputs to prevent XSS attacks.\n- **Rails**: Use Rails' built-in CSRF protection and parameter whitelisting.\n\n## 4. Testing Strategy\n\n### Frameworks & Approaches\n- **React**: Use Jest and React Testing Library for unit and integration tests.\n- **Rails**: Use RSpec for comprehensive testing.\n\n### Coverage Expectations\n- Aim for 80% code coverage, focusing on critical business logic.\n\n### Test Organization\n- **React**: Organize tests alongside components in a `__tests__` directory.\n- **Rails**: Group tests by type (models, controllers, features) under the `spec` directory.\n\n## 5. Documentation Standards\n\n### Code Commenting\n- Comment complex logic with concise explanations.\n- For React, use JSDoc comments for functions and components.\n\n### README & Documentation\n- Provide setup instructions, usage examples, and contribution guidelines.\n- Maintain a changelog for significant updates.\n\n### API Documentation\n- Use Swagger or similar tools to document API endpoints.\n\n## 6. Development Workflow\n\n### Git Workflow & Commit Messages\n- Use feature branches and the `main` branch for production-ready code.\n- Follow conventional commit messages:\n  - `feat`: A new feature\n  - `fix`: A bug fix\n  - `docs`: Documentation changes\n  - `style`: Code style changes (formatting, missing semi-colons, etc.)\n\n### Code Review Checklist\n- Check for adherence to this ruleset.\n- Ensure tests are present and passing.\n- Verify that changes align with project goals.\n\n### Deployment Considerations\n- Use CI/CD pipelines to automate testing and deployment.\n- Deploy to `fly.io` with environment-specific configurations.\n\n## 7. Technology-Specific Guidelines\n\n### React\n- Favor modern ES6+ syntax (e.g., arrow functions, destructuring).\n- Use `prop-types` or TypeScript for type checking.\n\n### Ruby on Rails\n- Use Rails migrations for schema changes.\n- Keep the `Gemfile` organized by functionality.\n\n### Configuration Management\n- Use environment variables for sensitive data.\n- Keep configuration files minimal and environment-specific.\n\nFeel free to experiment and iterate on these guidelines as you explore and innovate. Happy coding!"], ["version", 1], ["is_public", false], ["uuid", "56ccebb6-699d-460b-9a97-a0ab8f088c1e"], ["created_at", "2025-07-19 23:39:39.655635"], ["updated_at", "2025-07-19 23:39:39.655635"]]
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/services/active_agent_rules_service.rb:260:in `create_ruleset'
+  [1m[36mRuleset Load (0.6ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 8], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:43:in `generate_ruleset'
+Completed 201 Created in 17797ms (Views: 0.9ms | ActiveRecord: 13.6ms (7 queries, 1 cached) | GC: 7.7ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:46:50 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["Ruby on Rails", "Fly.io", "Active Agent"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}}
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010c1fa470>, params: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["Ruby on Rails", "Fly.io", "Active Agent"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (2.7ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Vibe Project - 7/19/2025"], ["description", "A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n"], ["tech_stack", "[\"Ruby on Rails\",\"Fly.io\",\"Active Agent\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:46:50.354150"], ["updated_at", "2025-07-19 23:46:50.354150"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (3.0ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (1.2ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 9], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 58ms (Views: 0.3ms | ActiveRecord: 22.1ms (3 queries, 0 cached) | GC: 0.8ms)
+
+
+Started POST "/api/v1/projects/9/generate_ruleset" for ::1 at 2025-07-19 16:46:50 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as JSON
+  Parameters: {"id"=>"9", "project"=>{}}
+  [1m[36mProject Load (0.6ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 9], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:75:in `set_project'
+AI Rule Archive API key not configured, skipping external ruleset fetch
+  [1m[36mRuleset Maximum (1.2ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 9]]
+  ↳ app/services/active_agent_rules_service.rb:306:in `create_ruleset'
+  [1m[36mCACHE Ruleset Maximum (0.0ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 9]]
+  ↳ app/models/ruleset.rb:26:in `set_version'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (3.8ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 1], ["project_id", 9], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "fd9134cd-51c5-45de-8886-804e5e166a0d"], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Create (3.8ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 9], ["content", "# 🎯 Personalized Coding Ruleset\n\n*Generated with AI assistance and community best practices*\n\n**Project**: A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n...\n**Developer Style**: Vibe coder\n**Tech Stack**: Ruby on Rails, Fly.io, Active Agent\n**Generated**: July 19, 2025 at 11:47 PM\n\n---\n\n# Custom Coding Ruleset for vibe_coder\n\nWelcome, vibe_coder! This ruleset is designed to align with your creative and experimental approach to coding while ensuring your AI coding assistant project remains robust and maintainable. Let's dive into the guidelines tailored for your technology stack and personal coding philosophy.\n\n## 1. Code Style & Formatting\n\n### Ruby on Rails\n- **Conventions**: Embrace Rails' \"Convention over Configuration\" by following established Rails conventions.\n- **Naming Conventions**:\n  - Variables and methods: `snake_case` (e.g., `custom_rule_set`)\n  - Classes and modules: `CamelCase` (e.g., `CustomRuleSetGenerator`)\n  - Files: Use `snake_case.rb` for Ruby files (e.g., `custom_rule_set_generator.rb`)\n- **Indentation & Spacing**:\n  - Use two spaces for indentation.\n  - Prefer single line for concise methods when possible:\n    ```ruby\n    def example_method; 'example'; end\n    ```\n- **Structure**:\n  - Group related methods together.\n  - Use blank lines to separate logical sections of your code.\n\n## 2. Architecture & Design Patterns\n\n### Recommended Patterns\n- **Rails MVC**: Stick to the Model-View-Controller pattern for organizing logic.\n- **Service Objects**: For complex logic, use service objects to encapsulate business logic.\n- **Active Agent**: Utilize this for AI-related tasks, maintaining modularity.\n\n### File Organization\n- Structure your Rails app using standard Rails directory layout.\n- Place experimental or prototype features in a dedicated `experimental` directory within `app`.\n\n### Separation of Concerns\n- Keep business logic out of controllers, using models and services instead.\n- Use helpers for view-related logic.\n\n## 3. Best Practices\n\n### Error Handling\n- Use `begin...rescue...end` blocks for error handling.\n- Create custom error classes for specific error types.\n\n### Performance Optimization\n- Use eager loading (`includes`) to avoid N+1 query problems.\n- Cache expensive operations where possible.\n\n### Security Considerations\n- Always sanitize user input to prevent SQL injection and XSS.\n- Use Rails' built-in security features like CSRF protection.\n\n## 4. Testing Strategy\n\n### Frameworks & Approaches\n- Use RSpec for unit and integration testing.\n- Embrace Test-Driven Development (TDD) for core features.\n\n### Coverage Expectations\n- Aim for 80% test coverage, focusing on critical paths.\n\n### Test Organization\n- Organize tests by feature within the `spec` directory.\n- Use `context` and `describe` blocks for clear test case organization.\n\n## 5. Documentation Standards\n\n### Code Commenting\n- Use comments to explain the \"why,\" not the \"what.\"\n- For complex logic, provide brief explanations.\n\n### README & Documentation\n- Keep the README updated with installation instructions and usage examples.\n- Use Markdown for documentation, focusing on clarity and user-friendliness.\n\n### API Documentation\n- Document APIs using a tool like Swagger or Apiary.\n- Include request/response examples and authentication details.\n\n## 6. Development Workflow\n\n### Git Workflow\n- Use feature branches for new features (`feature/custom-ruleset`).\n- Commit messages: Use the format `type(scope): description` (e.g., `feat(generator): add custom ruleset feature`).\n\n### Code Review Checklist\n- Ensure code adheres to this ruleset.\n- Check for tests and documentation updates with each feature.\n\n### Deployment Considerations\n- Deploy to Fly.io using continuous integration.\n- Ensure the deployment process is automated and documented.\n\n## 7. Technology-Specific Guidelines\n\n### Rails Best Practices\n- Use Rails generators to maintain consistency.\n- Utilize concerns for shared logic between models or controllers.\n\n### Library Usage Recommendations\n- Use gems like `pundit` for authorization and `sidekiq` for background jobs.\n- Keep dependencies up to date and documented.\n\n### Configuration Management\n- Use environment variables for configuration management.\n- Organize configurations in `config/environments` and `config/secrets.yml`.\n\nBy following these guidelines, you'll maintain a balance between creativity and best practices, ensuring your project is both innovative and sustainable. Happy coding, vibe_coder!"], ["version", 1], ["is_public", false], ["uuid", "fd9134cd-51c5-45de-8886-804e5e166a0d"], ["created_at", "2025-07-19 23:47:07.905892"], ["updated_at", "2025-07-19 23:47:07.905892"]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Load (5.5ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 9], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:43:in `generate_ruleset'
+Completed 201 Created in 17547ms (Views: 0.8ms | ActiveRecord: 17.7ms (7 queries, 1 cached) | GC: 2.5ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:51:18 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["Ruby on Rails", "Fly.io", "Active Agent"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010cabc6d0>, params: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["Ruby on Rails", "Fly.io", "Active Agent"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (3.8ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Vibe Project - 7/19/2025"], ["description", "A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n"], ["tech_stack", "[\"Ruby on Rails\",\"Fly.io\",\"Active Agent\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:51:18.694264"], ["updated_at", "2025-07-19 23:51:18.694264"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (2.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (0.4ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 10], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 23ms (Views: 0.3ms | ActiveRecord: 7.9ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/projects/10/generate_ruleset" for ::1 at 2025-07-19 16:51:18 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as JSON
+  Parameters: {"id"=>"10", "project"=>{}}
+  [1m[36mProject Load (0.3ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 10], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:75:in `set_project'
+AI Rule Archive API key not configured, skipping external ruleset fetch
+  [1m[36mRuleset Maximum (3.6ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 10]]
+  ↳ app/services/active_agent_rules_service.rb:306:in `create_ruleset'
+  [1m[36mCACHE Ruleset Maximum (0.0ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 10]]
+  ↳ app/models/ruleset.rb:26:in `set_version'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (11.1ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 1], ["project_id", 10], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "d47079a1-614c-4a8d-a19e-884c39465406"], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Create (3.5ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 10], ["content", "# 🎯 Personalized Coding Ruleset\n\n*Generated with AI assistance and community best practices*\n\n**Project**: A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n...\n**Developer Style**: Vibe coder\n**Tech Stack**: Ruby on Rails, Fly.io, Active Agent\n**Generated**: July 19, 2025 at 11:51 PM\n\n---\n\n# Comprehensive Coding Ruleset for vibe_coder\n\nWelcome, vibe_coder, to your personalized coding ruleset. This guide is designed to align with your creative, experimental approach while ensuring robust, maintainable, and high-performing code. Enjoy the flexibility and expressiveness you cherish in your development process.\n\n---\n\n## 1. Code Style & Formatting\n\n### Ruby on Rails Conventions\n\n- **Naming Conventions**:\n  - **Variables**: Use snake_case for variables (`user_name`).\n  - **Methods**: Use snake_case for method names (`calculate_total`).\n  - **Classes/Modules**: Use CamelCase for class and module names (`CustomRulesetGenerator`).\n  - **Files**: Use snake_case for file names (`custom_ruleset_generator.rb`).\n\n- **Indentation & Spacing**:\n  - Use 2 spaces for indentation.\n  - Ensure consistent spacing around operators (`x = y + 2`).\n  - Leave a blank line after method definitions and class/module declarations.\n\n- **Structure Guidelines**:\n  - Keep methods concise and focused on a single task.\n  - Use expressive and meaningful variable and method names to enhance readability.\n\n### Active Agent Specifics\n\n- Keep configuration files organized and well-commented.\n- Use descriptive names for agents and their actions reflecting their purpose.\n\n---\n\n## 2. Architecture & Design Patterns\n\n### Recommended Patterns\n\n- **Rails MVC Pattern**:\n  - Follow the Model-View-Controller pattern to maintain a clear separation of concerns.\n  \n- **Service Objects**:\n  - Use service objects for handling complex business logic outside of controllers and models.\n\n- **File Organization**:\n  - Organize files by domain or feature for better maintainability.\n  - Use Rails conventions for directory structure to ease navigation.\n\n---\n\n## 3. Best Practices\n\n### Error Handling\n\n- Use Rails `rescue_from` to gracefully handle exceptions.\n- Log errors with context to facilitate debugging.\n\n### Performance Optimization\n\n- Use eager loading (`includes`) to prevent N+1 query problems.\n- Optimize database queries and use indexes where appropriate.\n\n### Security Considerations\n\n- Use Rails' built-in protections against SQL Injection, Cross-Site Scripting (XSS), and Cross-Site Request Forgery (CSRF).\n- Regularly update gems to patch security vulnerabilities.\n\n---\n\n## 4. Testing Strategy\n\n### Testing Frameworks\n\n- Use RSpec for unit and integration tests.\n- Employ FactoryBot for setting up test data.\n\n### Coverage Expectations\n\n- Aim for at least 80% code coverage.\n- Focus on critical paths and edge cases.\n\n### Test Organization\n\n- Organize tests by feature or functionality.\n- Use descriptive test names to clarify intent.\n\n---\n\n## 5. Documentation Standards\n\n### Code Commenting\n\n- Comment on complex logic and non-obvious decisions.\n- Use YARD for documenting methods and classes.\n\n### README and Documentation\n\n- Maintain a comprehensive README with setup instructions, usage examples, and contribution guidelines.\n- Provide API documentation using tools like Swagger or Postman.\n\n---\n\n## 6. Development Workflow\n\n### Git Workflow\n\n- Follow the Gitflow branching model.\n- Write concise and descriptive commit messages (`feat: add custom ruleset generator`).\n\n### Code Review Checklist\n\n- Ensure code readability and maintainability.\n- Verify adherence to security and performance best practices.\n- Confirm sufficient test coverage.\n\n### Deployment Considerations\n\n- Automate deployments using CI/CD pipelines on Fly.io.\n- Monitor deployments for performance and error tracking.\n\n---\n\n## 7. Technology-Specific Guidelines\n\n### Rails Best Practices\n\n- Use Rails' convention over configuration for rapid development.\n- Leverage ActiveRecord callbacks wisely to maintain clean models.\n\n### Library Usage\n\n- Prefer lightweight libraries that enhance expressiveness and creativity.\n- Regularly review and update dependencies to maintain compatibility.\n\n### Configuration Management\n\n- Use environment variables for configuration settings.\n- Employ Rails' encrypted credentials for sensitive data.\n\n---\n\nAdopt these guidelines to create a robust, creative, and adaptable codebase for your custom ruleset generator app. Happy coding, vibe_coder! 🎨💻"], ["version", 1], ["is_public", false], ["uuid", "d47079a1-614c-4a8d-a19e-884c39465406"], ["created_at", "2025-07-19 23:51:34.404347"], ["updated_at", "2025-07-19 23:51:34.404347"]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Load (1.7ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 10], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:43:in `generate_ruleset'
+Completed 201 Created in 15706ms (Views: 1.3ms | ActiveRecord: 22.7ms (7 queries, 1 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:53:42 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["Ruby on Rails", "Fly.io", "Active Agent"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}}
+  [1m[36mUser Load (5.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010cfb8b70>, params: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["Ruby on Rails", "Fly.io", "Active Agent"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (8.1ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Vibe Project - 7/19/2025"], ["description", "A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n"], ["tech_stack", "[\"Ruby on Rails\",\"Fly.io\",\"Active Agent\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:53:42.798656"], ["updated_at", "2025-07-19 23:53:42.798656"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (1.8ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (0.8ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 11], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 379ms (Views: 0.5ms | ActiveRecord: 16.7ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/api/v1/projects/11/generate_ruleset" for ::1 at 2025-07-19 16:53:42 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as JSON
+  Parameters: {"id"=>"11", "project"=>{}}
+  [1m[36mProject Load (1.5ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 11], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:75:in `set_project'
+AI Rule Archive API key not configured, skipping external ruleset fetch
+  [1m[36mRuleset Maximum (3.0ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 11]]
+  ↳ app/services/active_agent_rules_service.rb:306:in `create_ruleset'
+  [1m[36mCACHE Ruleset Maximum (0.0ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 11]]
+  ↳ app/models/ruleset.rb:26:in `set_version'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (75.9ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 1], ["project_id", 11], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "f8e20c6a-458d-4f56-8f4c-87a19bb6e9bd"], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Create (2.5ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 11], ["content", "# 🎯 Personalized Coding Ruleset\n\n*Generated with AI assistance and community best practices*\n\n**Project**: A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n...\n**Developer Style**: Vibe coder\n**Tech Stack**: Ruby on Rails, Fly.io, Active Agent\n**Generated**: July 19, 2025 at 11:54 PM\n\n---\n\n# Personalized Coding Ruleset for vibe_coder\n\nWelcome, vibe_coder! This ruleset is designed to align with your creative and flexible coding style while ensuring your custom ruleset generator app is built robustly using the Ruby on Rails stack. This guide will help you maintain a balance between creativity and the best practices needed for a high-quality application.\n\n## 1. Code Style & Formatting\n\n### Ruby on Rails\n\n- **Conventions**: Follow Rails conventions as much as possible to leverage the framework's strengths and reduce configuration overhead.\n- **Naming Conventions**:\n  - **Variables**: Use snake_case for variables and method names (e.g., `user_profile`).\n  - **Classes & Modules**: Use CamelCase for class and module names (e.g., `CustomRulesetGenerator`).\n  - **Files**: Name files using snake_case, matching the primary class/module they contain.\n  \n- **Indentation & Spacing**:\n  - Use 2 spaces per indentation level.\n  - Separate methods with a single blank line.\n  - Use spaces around operators, after commas, colons, and semicolons, and around `{` and `}` when they are used.\n\n```ruby\ndef generate_ruleset(app_description)\n  # Example method implementation\nend\n```\n\n## 2. Architecture & Design Patterns\n\n- **Recommended Patterns**:\n  - **MVC (Model-View-Controller)**: Stick to this core Rails pattern to separate concerns cleanly.\n  - **Service Objects**: Use service objects for complex business logic that doesn't fit neatly into a model or controller.\n  - **Decorator Pattern**: Use decorators to add behavior to classes without modifying them.\n\n- **File Organization**:\n  - Organize code by functionality, keeping related files together.\n  - Use Rails generators to maintain consistency in structure.\n\n## 3. Best Practices\n\n- **Error Handling**:\n  - Use Rails' built-in exception handling mechanisms.\n  - Implement custom error pages for user-friendly error reporting.\n\n- **Performance Optimization**:\n  - Employ eager loading to reduce N+1 query problems.\n  - Cache expensive computations and frequently accessed data.\n\n- **Security**:\n  - Regularly update gems to patch vulnerabilities.\n  - Use Rails' built-in protection against SQL injection, XSS, and CSRF attacks.\n\n## 4. Testing Strategy\n\n- **Frameworks & Approaches**:\n  - Use RSpec for unit and integration testing.\n  - Implement FactoryBot for test object creation to keep tests clean and DRY.\n\n- **Coverage**:\n  - Aim for 80% coverage, focusing on critical paths and business logic.\n\n- **Organization**:\n  - Group tests by feature or functionality.\n  - Use shared examples to reduce duplication.\n\n## 5. Documentation Standards\n\n- **Code Commenting**:\n  - Comment complex logic or unusual code choices.\n  - Use YARD for documenting classes and methods.\n\n- **README**:\n  - Include a project overview, setup instructions, and basic usage.\n  - Update the README with any new features or changes.\n\n- **API Documentation**:\n  - Use Swagger or similar tools to document API endpoints.\n\n## 6. Development Workflow\n\n- **Git Workflow**:\n  - Use feature branches for new features and bug fixes.\n  - Write clear, concise commit messages (e.g., `Add dynamic ruleset generation feature`).\n\n- **Code Review**:\n  - Ensure code adheres to this ruleset.\n  - Check for potential security vulnerabilities and performance issues.\n\n- **Deployment**:\n  - Automate deployments with CI/CD pipelines on Fly.io.\n  - Verify that all tests pass before deploying to production.\n\n## 7. Technology-Specific Guidelines\n\n- **Rails Best Practices**:\n  - Stick to RESTful routing to keep controllers simple and predictable.\n  - Avoid fat models by using concerns and service objects.\n\n- **Library Usage**:\n  - Prefer well-maintained, popular libraries to ensure community support and security updates.\n  - Regularly review and prune unused gems to keep the application lean.\n\n- **Configuration Management**:\n  - Use environment variables for sensitive data and configuration.\n  - Leverage Rails' secrets management for secure key storage.\n\nBy following these guidelines, you'll create a flexible and maintainable application that allows your creativity to shine while adhering to the best practices of the Ruby on Rails ecosystem. Happy coding, vibe_coder!"], ["version", 1], ["is_public", false], ["uuid", "f8e20c6a-458d-4f56-8f4c-87a19bb6e9bd"], ["created_at", "2025-07-19 23:54:00.417357"], ["updated_at", "2025-07-19 23:54:00.417357"]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Load (0.6ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 11], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:43:in `generate_ruleset'
+Completed 201 Created in 17552ms (Views: 0.7ms | ActiveRecord: 84.5ms (7 queries, 1 cached) | GC: 33.4ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 16:57:30 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["Ruby on Rails", "Fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}}
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010c130288>, params: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n", "tech_stack"=>["Ruby on Rails", "Fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (4.8ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Vibe Project - 7/19/2025"], ["description", "A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n"], ["tech_stack", "[\"Ruby on Rails\",\"Fly.io\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-19 23:57:30.941118"], ["updated_at", "2025-07-19 23:57:30.941118"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (0.2ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 12], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 28ms (Views: 0.9ms | ActiveRecord: 7.2ms (3 queries, 0 cached) | GC: 2.1ms)
+
+
+Started POST "/api/v1/projects/12/generate_ruleset" for ::1 at 2025-07-19 16:57:30 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as JSON
+  Parameters: {"id"=>"12", "project"=>{}}
+  [1m[36mProject Load (0.3ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 12], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:75:in `set_project'
+AI Rule Archive API key not configured, skipping external ruleset fetch
+  [1m[36mRuleset Maximum (1.8ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 12]]
+  ↳ app/services/active_agent_rules_service.rb:306:in `create_ruleset'
+  [1m[36mCACHE Ruleset Maximum (0.0ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 12]]
+  ↳ app/models/ruleset.rb:26:in `set_version'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (2.4ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 1], ["project_id", 12], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (2.1ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "28d917d7-49db-4f96-84f9-dab3c8c108b7"], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Create (2.5ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 12], ["content", "# 🎯 Personalized Coding Ruleset\n\n*Generated with AI assistance and community best practices*\n\n**Project**: A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n...\n**Developer Style**: Vibe coder\n**Tech Stack**: Ruby on Rails, Fly.io\n**Generated**: July 19, 2025 at 11:57 PM\n\n---\n\n# Personalized Coding Ruleset for vibe_coder\n\nWelcome, vibe_coder! This ruleset is designed to embrace your passion for creativity, experimentation, and flexible coding approaches while ensuring best practices and standards are adhered to. This document will guide you in building a dynamic and efficient custom ruleset generator app using Ruby on Rails, deployed on Fly.io.\n\n---\n\n## 1. Code Style & Formatting\n\n### Ruby on Rails Conventions\n- **Use Rails Conventions**: Leverage Rails' convention-over-configuration philosophy to streamline development.\n  \n### Naming Conventions\n- **Variables**: Use snake_case for variables and symbols.\n  ```ruby\n  user_name = \"vibe_coder\"\n  ```\n- **Methods**: Use snake_case for method names.\n  ```ruby\n  def generate_ruleset\n  ```\n- **Classes/Modules**: Use CamelCase for class and module names.\n  ```ruby\n  class RulesetGenerator\n  ```\n- **Files**: Use snake_case for filenames.\n  ```plaintext\n  ruleset_generator.rb\n  ```\n\n### Indentation and Spacing\n- **Indentation**: Use 2 spaces per indentation level.\n- **Line Length**: Aim for 80 characters, but flexibility is allowed for readability.\n- **Spacing**: Use a single blank line between methods.\n\n### Structure Guidelines\n- **Blocks**: Use `{}` for single-line blocks and `do...end` for multi-line blocks.\n  ```ruby\n  3.times { puts \"Hello, world!\" }\n  \n  3.times do\n    puts \"Hello, world!\"\n  end\n  ```\n\n## 2. Architecture & Design Patterns\n\n### Recommended Patterns\n- **MVC Pattern**: Stick to Rails’ Model-View-Controller pattern to maintain organization.\n- **Service Objects**: For complex business logic, create service objects.\n  ```ruby\n  class RulesetService\n    def call\n      # business logic here\n    end\n  end\n  ```\n\n### File Organization\n- **Organize by Functionality**: Group files by their purpose, e.g., models, controllers, views, services, and helpers.\n\n### Separation of Concerns\n- **Keep Models Slim**: Avoid putting business logic in models. Use service objects instead.\n- **Controllers**: Should only handle request-related logic.\n\n## 3. Best Practices\n\n### Error Handling\n- **Rescue Specific Errors**: Avoid rescuing `Exception` or `StandardError` broadly.\n  ```ruby\n  begin\n    # risky operation\n  rescue SpecificError => e\n    # handle error\n  end\n  ```\n\n### Performance Optimization\n- **Eager Loading**: Use `includes` to avoid N+1 queries.\n  ```ruby\n  users = User.includes(:posts).all\n  ```\n\n### Security\n- **Parameter Filtering**: Use strong parameters to prevent mass assignment vulnerabilities.\n  ```ruby\n  params.require(:user).permit(:name, :email)\n  ```\n\n## 4. Testing Strategy\n\n### Frameworks and Approaches\n- **Use RSpec**: Prefer RSpec for expressive, readable test cases.\n- **FactoryBot**: Use FactoryBot for creating test data.\n\n### Coverage Expectations\n- **Aim for 80% Coverage**: Focus on critical parts of the application.\n\n### Test Organization\n- **Arrange-Act-Assert**: Follow this pattern for clarity and consistency.\n\n## 5. Documentation Standards\n\n### Code Commenting\n- **Method Comments**: Document complex methods with a brief description.\n  ```ruby\n  # Generates a personalized coding ruleset based on the user's identity\n  def generate_ruleset\n  ```\n\n### README and Documentation\n- **README**: Clearly describe setup instructions, usage, and contribution guidelines.\n- **API Documentation**: Use `rswag` or similar tools for generating API docs.\n\n## 6. Development Workflow\n\n### Git Workflow\n- **Feature Branches**: Use feature branches for new development.\n- **Commit Messages**: Follow Conventional Commits (e.g., `feat`, `fix`, `chore`).\n\n### Code Review Checklist\n- **Readability**: Is the code easy to understand?\n- **Functionality**: Does the code work as intended?\n\n### Deployment Considerations\n- **Continuous Deployment**: Use Fly.io’s deployment tools for seamless updates.\n\n## 7. Technology-Specific Guidelines\n\n### Rails Best Practices\n- **RESTful Routes**: Stick to RESTful routes for simplicity and consistency.\n- **Avoid Fat Models**: Use concerns to DRY up models.\n\n### Library Usage\n- **ActiveSupport**: Utilize ActiveSupport enhancements for cleaner code.\n\n### Configuration Management\n- **Use Environment Variables**: For sensitive data like API keys.\n\n---\n\nThis ruleset is designed to guide you through the development of your custom ruleset generator app while allowing room for creativity and experimentation. Enjoy the process, and happy coding, vibe_coder!"], ["version", 1], ["is_public", false], ["uuid", "28d917d7-49db-4f96-84f9-dab3c8c108b7"], ["created_at", "2025-07-19 23:57:46.786105"], ["updated_at", "2025-07-19 23:57:46.786105"]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Load (0.3ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 12], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:43:in `generate_ruleset'
+Completed 201 Created in 15823ms (Views: 2.6ms | ActiveRecord: 11.5ms (7 queries, 1 cached) | GC: 2.2ms)
+
+
+Started POST "/api/v1/projects" for ::1 at 2025-07-19 17:26:28 -0700
+Processing by Api::V1::ProjectsController#create as JSON
+  Parameters: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.", "tech_stack"=>["Ruby on Rails", "fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}}
+  [1m[36mUser Load (4.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = $1 LIMIT $2[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:15:in `create'
+[31mUnpermitted parameter: :requirements_content. Context: { controller: Api::V1::ProjectsController, action: create, request: #<ActionDispatch::Request:0x000000010cf733e0>, params: {"project"=>{"name"=>"Vibe Project - 7/19/2025", "description"=>"A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.", "tech_stack"=>["Ruby on Rails", "fly.io"], "dev_identity"=>"vibe_coder", "requirements_content"=>""}, "controller"=>"api/v1/projects", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (1.9ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mProject Create (15.9ms)[0m  [1m[32mINSERT INTO "projects" ("user_id", "name", "description", "tech_stack", "dev_identity", "requirements_file_content", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["user_id", 1], ["name", "Vibe Project - 7/19/2025"], ["description", "A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset."], ["tech_stack", "[\"Ruby on Rails\",\"fly.io\"]"], ["dev_identity", "vibe_coder"], ["requirements_file_content", nil], ["created_at", "2025-07-20 00:26:29.379025"], ["updated_at", "2025-07-20 00:26:29.379025"]]
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mTRANSACTION (3.6ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/controllers/api/v1/projects_controller.rb:18:in `create'
+  [1m[36mRuleset Load (2.9ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 13], ["LIMIT", 1]]
+  ↳ app/models/project.rb:15:in `latest_ruleset'
+Completed 201 Created in 698ms (Views: 1.1ms | ActiveRecord: 329.9ms (3 queries, 0 cached) | GC: 1.6ms)
+
+
+Started POST "/api/v1/projects/13/generate_ruleset" for ::1 at 2025-07-19 17:26:29 -0700
+Processing by Api::V1::ProjectsController#generate_ruleset as JSON
+  Parameters: {"id"=>"13", "project"=>{}}
+  [1m[36mProject Load (0.6ms)[0m  [1m[34mSELECT "projects".* FROM "projects" WHERE "projects"."id" = $1 LIMIT $2[0m  [["id", 13], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:75:in `set_project'
+AI Rule Archive API key not configured, skipping external ruleset fetch
+  [1m[36mRuleset Maximum (1.5ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 13]]
+  ↳ app/services/active_agent_rules_service.rb:306:in `create_ruleset'
+  [1m[36mCACHE Ruleset Maximum (0.0ms)[0m  [1m[34mSELECT MAX("rulesets"."version") FROM "rulesets" WHERE "rulesets"."project_id" = $1[0m  [["project_id", 13]]
+  ↳ app/models/ruleset.rb:26:in `set_version'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (3.5ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."version" = $1 AND "rulesets"."project_id" = $2 LIMIT $3[0m  [["version", 1], ["project_id", 13], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "rulesets" WHERE "rulesets"."uuid" = $1 LIMIT $2[0m  [["uuid", "45075261-8064-4bca-b186-903b52522461"], ["LIMIT", 1]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Create (7.3ms)[0m  [1m[32mINSERT INTO "rulesets" ("project_id", "content", "version", "is_public", "uuid", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["project_id", 13], ["content", "# 🎯 Personalized Coding Ruleset\n\n*Generated with AI assistance and community best practices*\n\n**Project**: A custom ruleset generator app for AI coding assistants. Describe your app and get a custom ruleset.\n**Developer Style**: Vibe coder\n**Tech Stack**: Ruby on Rails, fly.io\n**Generated**: July 20, 2025 at 12:26 AM\n\n---\n\n# Personalized Coding Ruleset for vibe_coder\n\nWelcome, vibe_coder! This ruleset is designed to align with your creative approach, allowing for flexibility and experimentation while ensuring that your code remains maintainable and efficient. Let's dive into the guidelines that will help you build an awesome custom ruleset generator app using Ruby on Rails and deployed on fly.io.\n\n## 1. Code Style & Formatting\n\n### Ruby on Rails Conventions\n- **Naming Conventions:**\n  - **Variables:** Use `snake_case` for variables and methods (e.g., `user_name`).\n  - **Classes & Modules:** Use `CamelCase` (e.g., `UserProfile`).\n  - **Files:** Name files using `snake_case` (e.g., `user_controller.rb`).\n\n- **Indentation & Spacing:**\n  - Use 2 spaces for indentation.\n  - Maintain a single blank line between methods within a class.\n  - Limit lines to a maximum of 80 characters to enhance readability.\n\n- **Structure Guidelines:**\n  - Keep method definitions concise, ideally no more than 10 lines.\n  - Use expressive and meaningful names for methods and variables to enhance code readability.\n\n## 2. Architecture & Design Patterns\n\n- **Recommended Patterns:**\n  - Utilize Rails' MVC architecture; keep models, views, and controllers distinct.\n  - Embrace RESTful design principles for routing and controller actions.\n\n- **File Organization:**\n  - Organize controllers, models, and views in their respective directories.\n  - Group related files into modules when possible.\n\n- **Separation of Concerns:**\n  - Keep business logic within models or service objects.\n  - Avoid using controllers for anything other than orchestrating requests and responses.\n\n## 3. Best Practices\n\n- **Error Handling:**\n  - Use `begin-rescue` blocks for anticipated exceptions.\n  - Log errors with meaningful messages to simplify debugging.\n\n- **Performance Optimization:**\n  - Use eager loading (`includes`) to reduce N+1 query problems.\n  - Cache expensive computations and database queries when feasible.\n\n- **Security Considerations:**\n  - Validate and sanitize all user inputs.\n  - Use Rails built-in protection against SQL injection, XSS, and CSRF.\n\n## 4. Testing Strategy\n\n- **Frameworks & Approaches:**\n  - Use RSpec for unit and integration tests.\n  - Consider using FactoryBot for test data setup.\n\n- **Coverage Expectations:**\n  - Aim for at least 80% test coverage, focusing on critical paths and key functionalities.\n\n- **Test Organization:**\n  - Organize tests by type (unit, integration) and feature.\n  - Use descriptive test names to communicate test purpose clearly.\n\n## 5. Documentation Standards\n\n- **Code Commenting:**\n  - Comment on complex logic or non-obvious code sections.\n  - Use YARD for documenting classes and methods.\n\n- **README & Documentation:**\n  - Include setup instructions, a brief overview of the app, and usage examples.\n  - Keep documentation up-to-date with code changes.\n\n- **API Documentation:**\n  - Use tools like Swagger or API Blueprint to generate API documentation.\n\n## 6. Development Workflow\n\n- **Git Workflow:**\n  - Use feature branches for new features and bug fixes.\n  - Write descriptive commit messages, e.g., `Add feature to generate custom ruleset`.\n\n- **Code Review Checklist:**\n  - Ensure code adheres to style guidelines.\n  - Verify that new features include corresponding tests.\n  - Check for potential performance and security issues.\n\n- **Deployment Considerations:**\n  - Automate deployments using CI/CD pipelines.\n  - Test deployments in staging environments before production.\n\n## 7. Technology-Specific Guidelines\n\n- **Framework-Specific Best Practices:**\n  - Follow Rails conventions closely to leverage its full power.\n  - Use `config/environments` for environment-specific settings.\n\n- **Library Usage:**\n  - Prefer gems that are well-documented and actively maintained.\n  - Regularly update dependencies to their latest stable versions.\n\n- **Configuration Management:**\n  - Use environment variables for sensitive configurations.\n  - Keep configuration files in sync across environments.\n\n---\n\nFeel free to adapt these guidelines as you experiment and learn. Happy coding!"], ["version", 1], ["is_public", false], ["uuid", "45075261-8064-4bca-b186-903b52522461"], ["created_at", "2025-07-20 00:26:51.177150"], ["updated_at", "2025-07-20 00:26:51.177150"]]
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[35mCOMMIT[0m
+  ↳ app/services/active_agent_rules_service.rb:308:in `create_ruleset'
+  [1m[36mRuleset Load (3.3ms)[0m  [1m[34mSELECT "rulesets".* FROM "rulesets" WHERE "rulesets"."project_id" = $1 ORDER BY "rulesets"."version" DESC LIMIT $2[0m  [["project_id", 13], ["LIMIT", 1]]
+  ↳ app/controllers/api/v1/projects_controller.rb:43:in `generate_ruleset'
+Completed 201 Created in 21771ms (Views: 3.5ms | ActiveRecord: 18.7ms (7 queries, 1 cached) | GC: 3.1ms)
+
+
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
+[dotenv] Set [36mDATABASE_USERNAME[0m, [36mDATABASE_PASSWORD[0m, [36mDATABASE_HOST[0m, [36mDATABASE_PORT[0m, [36mSECRET_KEY_BASE[0m, [36mCORS_ALLOWED_ORIGINS[0m, [36mMAX_FILE_SIZE[0m, [36mALLOWED_FILE_TYPES[0m, [36mOPENAI_API_KEY[0m, [36mAI_RULE_ARCHIVE_API_KEY[0m, and [36mAI_RULE_ARCHIVE_BASE_URL[0m
+[dotenv] Loaded [33m.env[0m
