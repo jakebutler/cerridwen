@@ -10,23 +10,23 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-cream min-h-screen">
     <div x-data="dashboardApp()" x-cloak>
         <!-- Navigation Header -->
-        <nav class="bg-white shadow-sm border-b">
+        <nav class="bg-white shadow-sm border-b border-earth-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
                     <!-- Logo and Title -->
                     <div class="flex items-center">
-                        <h1 class="text-2xl font-bold text-gray-900">🧙‍♂️ Cerridwen</h1>
-                        <span class="ml-3 text-sm text-gray-500">AI Rules Wizard</span>
+                        <h1 class="text-2xl font-bold text-forest-700">🧙‍♂️ Cerridwen</h1>
+                        <span class="ml-3 text-sm text-earth-700">AI Rules Wizard</span>
                     </div>
 
                     <!-- User Info and Actions -->
                     <div class="flex items-center space-x-4">
                         <!-- Credits Display -->
-                        <div class="flex items-center bg-blue-50 px-3 py-1 rounded-full">
-                            <span class="text-blue-600 font-medium text-sm">💳 <span x-text="user.credits || 0"></span> credits</span>
+                        <div class="flex items-center bg-forest-100 px-3 py-1 rounded-full">
+                            <span class="text-forest-700 font-medium text-sm">💳 <span x-text="user.credits || 0"></span> credits</span>
                         </div>
 
                         <!-- Admin Toggle (if admin) -->
@@ -38,13 +38,13 @@
 
                         <!-- User Menu -->
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900">
+                            <button @click="open = !open" class="flex items-center text-earth-700 hover:text-forest-700">
                                 <span x-text="user.email" class="text-sm"></span>
                                 <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                 </svg>
                             </button>
-                            <div x-show="open" @click.away="open = false" 
+                            <div x-show="open" @click.away="open = false"
                                  class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                                 <button @click="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Sign Out
@@ -68,19 +68,19 @@
                 <!-- Admin Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                     <div class="bg-white rounded-lg shadow p-6">
-                        <div class="text-2xl font-bold text-gray-900" x-text="adminStats.total_users || 0"></div>
+                        <div class="text-2xl font-bold text-forest-700" x-text="adminStats.total_users || 0"></div>
                         <div class="text-sm text-gray-600">Total Users</div>
                     </div>
                     <div class="bg-white rounded-lg shadow p-6">
-                        <div class="text-2xl font-bold text-gray-900" x-text="adminStats.total_rulesets || 0"></div>
+                        <div class="text-2xl font-bold text-forest-700" x-text="adminStats.total_rulesets || 0"></div>
                         <div class="text-sm text-gray-600">Total Rulesets</div>
                     </div>
                     <div class="bg-white rounded-lg shadow p-6">
-                        <div class="text-2xl font-bold text-gray-900" x-text="adminStats.total_credits_used || 0"></div>
+                        <div class="text-2xl font-bold text-forest-700" x-text="adminStats.total_credits_used || 0"></div>
                         <div class="text-sm text-gray-600">Credits Used</div>
                     </div>
                     <div class="bg-white rounded-lg shadow p-6">
-                        <div class="text-2xl font-bold text-gray-900" x-text="adminStats.recent_activity?.new_users_this_week || 0"></div>
+                        <div class="text-2xl font-bold text-forest-700" x-text="adminStats.recent_activity?.new_users_this_week || 0"></div>
                         <div class="text-sm text-gray-600">New Users This Week</div>
                     </div>
                 </div>
@@ -116,8 +116,8 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="adminUser.total_used"></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="adminUser.rulesets_count"></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <button @click="showGrantCreditsModal(adminUser)" 
-                                                    class="text-blue-600 hover:text-blue-900 mr-3">Grant Credits</button>
+                                            <button @click="showGrantCreditsModal(adminUser)"
+                                                    class="text-forest-500 hover:text-forest-700 mr-3">Grant Credits</button>
                                         </td>
                                     </tr>
                                 </template>
@@ -133,17 +133,17 @@
                 <div class="bg-white rounded-lg shadow p-6 mb-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-900">Welcome back!</h2>
-                            <p class="text-gray-600">Ready to generate some AI-powered coding rulesets?</p>
+                            <h2 class="text-2xl font-bold text-forest-700">Welcome back!</h2>
+                            <p class="text-earth-700">Ready to generate some AI-powered coding rulesets?</p>
                         </div>
-                        <button @click="createNewRuleset()" 
+                        <button @click="createNewRuleset()"
                                 :disabled="!user.credits || user.credits <= 0"
-                                :class="!user.credits || user.credits <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'"
+                                :class="!user.credits || user.credits <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-forest-500 hover:bg-forest-700'"
                                 class="px-6 py-3 text-white rounded-lg font-medium transition-colors">
                             ✨ Create New Ruleset
                         </button>
                     </div>
-                    
+
                     <!-- Credit Warning -->
                     <div x-show="!user.credits || user.credits <= 0" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
                         <p class="text-yellow-800">⚠️ You have no credits remaining. Contact an administrator to get more credits.</p>
@@ -153,19 +153,19 @@
                 <!-- Stats Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                     <div class="bg-white rounded-lg shadow p-6">
-                        <div class="text-2xl font-bold text-blue-600" x-text="user.credits || 0"></div>
+                        <div class="text-2xl font-bold text-forest-500" x-text="user.credits || 0"></div>
                         <div class="text-sm text-gray-600">Credits Remaining</div>
                     </div>
                     <div class="bg-white rounded-lg shadow p-6">
-                        <div class="text-2xl font-bold text-gray-900" x-text="quickStats.total_rulesets || 0"></div>
+                        <div class="text-2xl font-bold text-forest-700" x-text="quickStats.total_rulesets || 0"></div>
                         <div class="text-sm text-gray-600">Total Rulesets</div>
                     </div>
                     <div class="bg-white rounded-lg shadow p-6">
-                        <div class="text-2xl font-bold text-gray-900" x-text="quickStats.total_projects || 0"></div>
+                        <div class="text-2xl font-bold text-forest-700" x-text="quickStats.total_projects || 0"></div>
                         <div class="text-sm text-gray-600">Projects</div>
                     </div>
                     <div class="bg-white rounded-lg shadow p-6">
-                        <div class="text-2xl font-bold text-gray-900" x-text="quickStats.credits_used_total || 0"></div>
+                        <div class="text-2xl font-bold text-forest-700" x-text="quickStats.credits_used_total || 0"></div>
                         <div class="text-sm text-gray-600">Credits Used</div>
                     </div>
                 </div>
@@ -193,12 +193,12 @@
                                             </div>
                                             <div class="flex flex-wrap gap-1 mt-2">
                                                 <template x-for="tag in ruleset.tags.slice(0, 5)" :key="tag">
-                                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full" x-text="tag"></span>
+                                                    <span class="inline-block bg-forest-100 text-forest-700 text-xs px-2 py-1 rounded-full" x-text="tag"></span>
                                                 </template>
                                             </div>
                                         </div>
                                         <div class="flex space-x-2 ml-4">
-                                            <button @click="viewRuleset(ruleset)" class="text-blue-600 hover:text-blue-900 text-sm">View</button>
+                                            <button @click="viewRuleset(ruleset)" class="text-forest-500 hover:text-forest-700 text-sm">View</button>
                                             <button @click="editRuleset(ruleset)" class="text-green-600 hover:text-green-900 text-sm">Edit</button>
                                         </div>
                                     </div>
@@ -220,13 +220,13 @@
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Credits to Grant</label>
-                    <input type="number" x-model="grantAmount" min="1" max="100" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="number" x-model="grantAmount" min="1" max="100"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-forest-500">
                 </div>
                 <div class="flex justify-end space-x-3">
                     <button @click="closeGrantModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
                     <button @click="grantCredits()" :disabled="!grantAmount || grantAmount <= 0"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50">
+                            class="px-4 py-2 bg-forest-500 text-white rounded-md hover:bg-forest-700 disabled:opacity-50">
                         Grant Credits
                     </button>
                 </div>

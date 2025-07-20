@@ -43,6 +43,7 @@ Rails.application.routes.draw do
         post 'users/:user_id/grant_credits', to: 'admin#grant_credits'
         get 'users/:user_id/transactions', to: 'admin#credit_transactions'
         get 'stats', to: 'admin#system_stats'
+        get 'design_system', to: 'design_system#index'
       end
 
       # Public ruleset sharing

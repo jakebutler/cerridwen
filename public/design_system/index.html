@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerridwen - Design System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#f8f5f0',
+                        forest: {
+                            100: '#e6ede4',
+                            500: '#4a6741',
+                            700: '#2c3e29',
+                        },
+                        earth: {
+                            300: '#c2a084',
+                            500: '#8b6b4c',
+                            700: '#5d4832',
+                        }
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f5f0;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+    <div class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold text-forest-700">Design System</h1>
+        <p class="text-lg text-gray-700 mt-2">A collection of UI components used throughout the Cerridwen application.</p>
+
+        <!-- Color Palette -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-forest-700 mb-4">Color Palette</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-earth-700 mb-2">Cream</h3>
+                    <div class="h-24 bg-cream rounded-lg shadow-inner border border-gray-200"></div>
+                    <p class="text-sm text-gray-600 mt-2">#f8f5f0</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-earth-700 mb-2">Forest</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="h-24 bg-forest-100 rounded-lg shadow-inner border border-gray-200"></div>
+                        <div class="h-24 bg-forest-500 rounded-lg shadow-inner"></div>
+                        <div class="h-24 bg-forest-700 rounded-lg shadow-inner"></div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-sm text-gray-600 mt-2">
+                        <p>#e6ede4</p>
+                        <p>#4a6741</p>
+                        <p>#2c3e29</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-earth-700 mb-2">Earth</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="h-24 bg-earth-300 rounded-lg shadow-inner"></div>
+                        <div class="h-24 bg-earth-500 rounded-lg shadow-inner"></div>
+                        <div class="h-24 bg-earth-700 rounded-lg shadow-inner"></div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-sm text-gray-600 mt-2">
+                        <p>#c2a084</p>
+                        <p>#8b6b4c</p>
+                        <p>#5d4832</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-forest-700 mb-4">Typography</h2>
+            <div class="space-y-4">
+                <h1 class="text-4xl font-bold text-forest-700">Heading 1</h1>
+                <h2 class="text-2xl font-bold text-forest-700">Heading 2</h2>
+                <h3 class="text-lg font-semibold text-earth-700">Heading 3</h3>
+                <p class="text-base text-gray-700">This is a paragraph of text. It uses the Poppins font family.</p>
+                <a href="#" class="text-forest-500 hover:text-forest-700">This is a link.</a>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-forest-700 mb-4">Buttons</h2>
+            <div class="flex flex-wrap items-center gap-4">
+                <button class="bg-forest-500 hover:bg-forest-700 text-white py-2 px-6 rounded-lg transition-colors shadow-md">
+                    Primary Button
+                </button>
+                <button class="border-2 border-earth-300 hover:border-earth-500 text-earth-500 hover:text-earth-700 py-2 px-6 rounded-lg transition-colors">
+                    Secondary Button
+                </button>
+                <button class="bg-red-500 hover:bg-red-700 text-white py-2 px-6 rounded-lg transition-colors shadow-md">
+                    Danger Button
+                </button>
+            </div>
+        </div>
+
+        <!-- Form Elements -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-forest-700 mb-4">Form Elements</h2>
+            <div class="max-w-md space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Text Input</label>
+                    <input type="text" placeholder="Enter text here..."
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Textarea</label>
+                    <textarea placeholder="Enter a longer message..." rows="4"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Select Menu</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent">
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="checkbox" class="h-4 w-4 text-forest-500 border-gray-300 rounded focus:ring-forest-500">
+                    <label for="checkbox" class="ml-2 block text-sm text-gray-900">Checkbox</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
