@@ -9,10 +9,65 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-sm border-b mb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Title -->
+                <div class="flex items-center">
+                    <a href="/dashboard/" class="text-2xl font-bold text-gray-900">🧙‍♂️ Cerridwen</a>
+                    <span class="ml-3 text-sm text-gray-500">AI Rules Wizard</span>
+                </div>
+
+                <!-- User Info and Actions -->
+                <div x-data="navApp()" class="flex items-center space-x-4">
+                    <!-- Authenticated User View -->
+                    <div x-show="isAuthenticated">
+                        <!-- Credits Display -->
+                        <div class="flex items-center bg-blue-50 px-3 py-1 rounded-full">
+                            <span class="text-blue-600 font-medium text-sm">💳 <span x-text="userCredits"></span> credits</span>
+                        </div>
+
+                        <!-- Back to Dashboard -->
+                        <a href="/dashboard/" class="text-gray-600 hover:text-gray-900 text-sm">← Back to Dashboard</a>
+
+                        <!-- User Menu -->
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900">
+                                <span x-text="userEmail" class="text-sm"></span>
+                                <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                            <div x-show="open" @click.away="open = false" 
+                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                                <a href="/dashboard/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                                <button @click="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unauthenticated User View -->
+                    <div x-show="!isAuthenticated" class="flex items-center space-x-3">
+                        <span class="text-sm text-gray-600">Try the wizard for free!</span>
+                        <a href="/auth/" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition-colors">
+                            Sign In
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <!-- Wizard Container -->
-    <div x-data="wizardApp()" class="container mx-auto px-4 py-8 max-w-4xl">
+    <div x-data="wizardApp()" x-init="init()" x-cloak class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
         <header class="text-center mb-12">
             <h1 class="text-4xl font-bold text-gradient mb-4">✨ Rules Wizard</h1>
@@ -402,6 +457,56 @@
                 },
                 
                 // Comprehensive tech stack library from tech-stack-library.md
+                // Initialize wizard on page load
+                async init() {
+                    // Check URL parameters for automatic results display
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const showResults = urlParams.get('results');
+                    const projectId = urlParams.get('projectId');
+                    const rulesetId = urlParams.get('rulesetId');
+                    
+                    if (showResults === 'true' && projectId && rulesetId) {
+                        // Automatically display results from post-signup generation
+                        await this.loadAndDisplayResults(projectId, rulesetId);
+                    }
+                },
+                
+                async loadAndDisplayResults(projectId, rulesetId) {
+                    try {
+                        // Fetch the generated ruleset
+                        const response = await fetch(`http://localhost:3000/api/v1/rulesets/${rulesetId}`, {
+                            credentials: 'include'
+                        });
+                        
+                        if (response.ok) {
+                            const rulesetData = await response.json();
+                            
+                            // Set up the results display
+                            this.generatedRuleset = {
+                                content: rulesetData.data.content,
+                                version: rulesetData.data.version,
+                                stats: {
+                                    wordCount: rulesetData.data.content.split(' ').length,
+                                    version: rulesetData.data.version,
+                                    techStackCount: rulesetData.data.tech_stack?.length || 0,
+                                    model: 'GPT-4o'
+                                },
+                                projectName: 'Generated Project'
+                            };
+                            
+                            // Show results immediately
+                            this.showResults = true;
+                            
+                            // Clean up URL parameters
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        }
+                    } catch (error) {
+                        console.error('Error loading results:', error);
+                        // Fallback to normal wizard flow
+                        this.showResults = false;
+                    }
+                },
+
                 allTechnologies: [
                     // Programming Languages
                     'Python', 'JavaScript', 'TypeScript', 'Java', 'C', 'C++', 'C#', 'Go', 'Rust', 'Kotlin', 'Swift', 'Objective-C', 'Ruby', 'PHP', 'Dart', 'Scala', 'Perl', 'R', 'MATLAB', 'Julia', 'Haskell', 'Elixir', 'F#', 'Visual Basic', 'Shell', 'Assembly', 'SQL', 'PL/SQL', 'GraphQL', 'Groovy', 'Lua', 'Erlang', 'Solidity',
@@ -567,24 +672,42 @@
                 },
                 
                 async generateRules() {
-            try {
-                // Show loading state
-                this.isGenerating = true;
-                const generateButton = document.querySelector('button[x-show="currentStep < totalSteps"]');
-                if (generateButton) {
-                    generateButton.disabled = true;
-                    generateButton.innerHTML = '⏳ Generating Rules...';
+            if (this.isGenerating) return;
+            
+            // Check if user is authenticated first
+            const navAppInstance = Alpine.$data(document.querySelector('[x-data="navApp()"]'));
+            if (!navAppInstance.isAuthenticated) {
+                // Show sign-up prompt for unauthenticated users
+                if (confirm('To generate a custom ruleset, you need to create a free account. You\'ll get 10 free credits to start! Would you like to sign up now?')) {
+                    // Store the current form data in localStorage so we can restore it after signup
+                    localStorage.setItem('pendingRulesetData', JSON.stringify(this.formData));
+                    window.location.href = '/auth/?signup=true';
+                    return;
+                } else {
+                    return; // User declined to sign up
                 }
-
-                console.log('Sending form data to backend:', this.formData);
-
-                // Create project via Rails API
+            }
+            
+            // Check if user has credits
+            if (navAppInstance.userCredits <= 0) {
+                this.error = 'You don\'t have enough credits to generate a ruleset. Please contact support or check your dashboard for more information.';
+                return;
+            }
+            
+            this.isGenerating = true;
+            this.showLoading = true;
+            this.loadingStep = 'Preparing your request...';
+            this.error = '';
+            
+            try {
+                // Create project first
+                this.loadingStep = 'Creating your project...';
                 const projectResponse = await fetch('http://localhost:3000/api/v1/projects', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
                     },
+                    credentials: 'include',
                     body: JSON.stringify({
                         project: {
                             name: `${this.formData.devIdentity === 'vibe_coder' ? 'Vibe' : 'Pro'} Project - ${new Date().toLocaleDateString()}`,
@@ -597,53 +720,72 @@
                 });
 
                 if (!projectResponse.ok) {
-                    throw new Error(`Project creation failed: ${projectResponse.status}`);
+                    const errorData = await projectResponse.json();
+                    if (projectResponse.status === 401) {
+                        this.error = 'Please sign in to generate rulesets.';
+                        return;
+                    }
+                    throw new Error(errorData.error || 'Failed to create project');
                 }
 
                 const projectData = await projectResponse.json();
-                console.log('Project created:', projectData);
+                const projectId = projectData.data.id;
 
-                // Generate ruleset for the project
-                const rulesetResponse = await fetch(`http://localhost:3000/api/v1/projects/${projectData.id}/generate_ruleset`, {
+                // Generate ruleset
+                this.loadingStep = 'Fetching community examples...';
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Brief pause for UX
+                
+                this.loadingStep = 'Analyzing your tech stack...';
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                this.loadingStep = 'Generating your custom rules...';
+                
+                const rulesetResponse = await fetch(`http://localhost:3000/api/v1/projects/${projectId}/generate_ruleset`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
+                    },
+                    credentials: 'include'
                 });
 
                 if (!rulesetResponse.ok) {
-                    throw new Error(`Ruleset generation failed: ${rulesetResponse.status}`);
+                    const errorData = await rulesetResponse.json();
+                    if (rulesetResponse.status === 401) {
+                        this.error = 'Please sign in to generate rulesets.';
+                        return;
+                    }
+                    if (rulesetResponse.status === 402) {
+                        this.error = 'Insufficient credits. Please check your dashboard for more information.';
+                        return;
+                    }
+                    throw new Error(errorData.error || 'Failed to generate ruleset');
                 }
 
                 const rulesetData = await rulesetResponse.json();
-                console.log('Ruleset generated:', rulesetData);
-
-                // Store the generated ruleset for display
+                
+                // Store the generated data
                 this.generatedRuleset = {
                     content: rulesetData.data.content,
-                    projectId: projectData.id,
-                    version: rulesetData.data.version,
-                    wordCount: rulesetData.data.word_count,
-                    techStack: rulesetData.data.tech_stack,
-                    devIdentity: rulesetData.data.dev_identity
+                    stats: {
+                        wordCount: rulesetData.data.content.split(' ').length,
+                        version: rulesetData.data.version,
+                        techStackCount: this.formData.techStack.length,
+                        model: 'GPT-4o'
+                    },
+                    projectName: this.formData.projectName || 'Generated Project'
                 };
-
-                // Move to results step
-                this.currentStep = this.totalSteps + 1;
+                
+                // Refresh user credits after successful generation
+                await navAppInstance.loadUserInfo();
+                
                 this.showResults = true;
-
+                
             } catch (error) {
                 console.error('Error generating rules:', error);
-                alert(`❌ Error: ${error.message}\n\nPlease check the console for details and ensure the backend server is running on port 3000.`);
+                this.error = error.message;
             } finally {
-                // Reset loading state
                 this.isGenerating = false;
-                const generateButton = document.querySelector('button[x-show="currentStep < totalSteps"]');
-                if (generateButton) {
-                    generateButton.disabled = false;
-                    generateButton.innerHTML = '<span x-text="currentStep === totalSteps ? \'Generate Rules ✨\' : \'Next →\'"></span>';
-                }
+                this.showLoading = false;
             }
         },
 
@@ -706,6 +848,68 @@
             this.uploadedFile = null;
         }
     }
+    }
+
+    // Navigation app for header
+    function navApp() {
+        return {
+            userEmail: '',
+            userCredits: 0,
+            isAuthenticated: false,
+
+            async init() {
+                await this.loadUserInfo();
+            },
+
+            async loadUserInfo() {
+                try {
+                    // Use credentials now that sessions are properly configured
+                    const response = await fetch('http://localhost:3000/api/v1/dashboard/credits', {
+                        credentials: 'include'
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.userCredits = data.credits || 0;
+                        this.isAuthenticated = true;
+                        
+                        // Get user email from dashboard API
+                        const dashboardResponse = await fetch('http://localhost:3000/api/v1/dashboard', {
+                            credentials: 'include'
+                        });
+                        
+                        if (dashboardResponse.ok) {
+                            const dashboardData = await dashboardResponse.json();
+                            this.userEmail = dashboardData.data.user.email;
+                        }
+                    } else if (response.status === 401) {
+                        // Not authenticated - this is fine for the wizard
+                        this.isAuthenticated = false;
+                        this.userCredits = 0;
+                        this.userEmail = '';
+                    }
+                } catch (error) {
+                    console.error('Failed to load user info:', error);
+                    // Assume not authenticated if there's an error
+                    this.isAuthenticated = false;
+                    this.userCredits = 0;
+                    this.userEmail = '';
+                }
+            },
+
+            async logout() {
+                try {
+                    await fetch('http://localhost:3000/api/v1/users/sign_out', {
+                        method: 'DELETE',
+                        credentials: 'include'
+                    });
+                    window.location.href = '/auth/';
+                } catch (error) {
+                    console.error('Logout failed:', error);
+                    window.location.href = '/auth/';
+                }
+            }
+        }
     }
     </script>
 </body>
