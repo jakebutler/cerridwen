@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rules Wizard - Generate Your AI Coding Rules</title>
+    <link href="./application.css" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+    <!-- Wizard Container -->
+    <div x-data="wizardApp()" class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gradient mb-4">✨ Rules Wizard</h1>
+            <p class="text-xl text-gray-600 mb-8">"Describe your app. Get magical, personalized AI rules."</p>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-8">
+                <div class="bg-gradient-primary h-2 rounded-full transition-all duration-500" 
+                     :style="`width: ${(currentStep / totalSteps) * 100}%`"></div>
+            </div>
+            
+            <!-- Step Indicators -->
+            <div class="flex justify-center space-x-4 mb-8">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300"
+                             :class="index < currentStep ? 'bg-primary-600 text-white' : 
+                                     index === currentStep ? 'bg-primary-100 text-primary-600 border-2 border-primary-600' : 
+                                     'bg-gray-200 text-gray-500'"
+                             x-text="index + 1">
+                        </div>
+                        <div x-show="index < steps.length - 1" class="w-12 h-0.5 bg-gray-200 ml-2"></div>
+                    </div>
+                </template>
+            </div>
+        </header>
+
+        <!-- Wizard Steps -->
+        <main class="card max-w-2xl mx-auto">
+            <!-- Step 1: Dev Identity -->
+            <div x-show="currentStep === 1" class="wizard-step" x-transition>
+                <h2 class="text-2xl font-semibold mb-6">What's your coding vibe? 🎯</h2>
+                <p class="text-gray-600 mb-8">This helps us tailor the rules to your style and experience level.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="option-card cursor-pointer transition-all duration-200" 
+                         :class="formData.devIdentity === 'vibe_coder' ? 'selected ring-2 ring-purple-500 bg-purple-50 border-purple-200' : 'hover:border-purple-200 hover:shadow-md'"
+                         @click="formData.devIdentity = 'vibe_coder'">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-4xl">🎨</div>
+                            <div x-show="formData.devIdentity === 'vibe_coder'" class="text-purple-600">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2" :class="formData.devIdentity === 'vibe_coder' ? 'text-purple-700' : ''">Vibe Coder</h3>
+                        <p class="text-gray-600">I code by feel, experiment lots, and love creative solutions. Keep it fun and flexible!</p>
+                    </div>
+                    
+                    <div class="option-card cursor-pointer transition-all duration-200"
+                         :class="formData.devIdentity === 'experienced_dev' ? 'selected ring-2 ring-blue-500 bg-blue-50 border-blue-200' : 'hover:border-blue-200 hover:shadow-md'"
+                         @click="formData.devIdentity = 'experienced_dev'">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-4xl">⚡</div>
+                            <div x-show="formData.devIdentity === 'experienced_dev'" class="text-blue-600">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2" :class="formData.devIdentity === 'experienced_dev' ? 'text-blue-700' : ''">Experienced Dev</h3>
+                        <p class="text-gray-600">I follow best practices, value structure, and want comprehensive, professional rules.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Tech Stack -->
+            <div x-show="currentStep === 2" class="wizard-step" x-transition>
+                <h2 class="text-2xl font-semibold mb-6">What's your tech stack? 🛠️</h2>
+                <p class="text-gray-600 mb-6">Select the technologies you're using or planning to use.</p>
+                
+                <!-- Examples Section -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-8">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">💡 Popular Examples:</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                        <div class="text-gray-600">
+                            <strong>Languages:</strong><br>
+                            JavaScript, Python, TypeScript, Java
+                        </div>
+                        <div class="text-gray-600">
+                            <strong>Frontend:</strong><br>
+                            React, Vue.js, Angular, Svelte
+                        </div>
+                        <div class="text-gray-600">
+                            <strong>Backend:</strong><br>
+                            Node.js, Django, Rails, Express
+                        </div>
+                        <div class="text-gray-600">
+                            <strong>Tools:</strong><br>
+                            Docker, AWS, PostgreSQL, Redis
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tech Stack Typeahead Input -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Add Technologies:</label>
+                    <div class="relative">
+                        <input type="text" 
+                               x-model="techInput"
+                               @input="filterTechnologies()"
+                               @keydown="handleTechKeydown($event)"
+                               @focus="filterTechnologies()"
+                               @blur="setTimeout(() => showSuggestions = false, 200)"
+                               placeholder="Type to search technologies (React, Python, Docker, etc.)"
+                               class="input w-full">
+                        
+                        <!-- Typeahead Suggestions -->
+                        <div x-show="showSuggestions && filteredTechs.length > 0" 
+                             class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto">
+                            <template x-for="(tech, index) in filteredTechs" :key="tech">
+                                <div @click="addTechnology(tech)"
+                                     :class="selectedIndex === index ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'"
+                                     class="px-4 py-2 cursor-pointer border-b border-gray-100 last:border-b-0">
+                                    <span x-text="tech"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">💡 Use arrow keys to navigate, Enter to select, or type custom technologies</p>
+                </div>
+
+                <!-- Selected Technologies Display -->
+                <div x-show="formData.techStack.length > 0" class="mb-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Selected Technologies:</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <template x-for="tech in formData.techStack" :key="tech">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                <span x-text="tech"></span>
+                                <button @click="removeTechnology(tech)" 
+                                        class="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-600 focus:outline-none">
+                                    ×
+                                </button>
+                            </span>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: App Description -->
+            <div x-show="currentStep === 3" class="wizard-step" x-transition>
+                <h2 class="text-2xl font-semibold mb-6">Tell us about your app 📝</h2>
+                <p class="text-gray-600 mb-8">Describe what your application does, its purpose, and any specific requirements.</p>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">App Description</label>
+                    <textarea x-model="formData.description" 
+                              rows="6" 
+                              placeholder="e.g., A social media platform for developers to share code snippets and collaborate on projects. Users can create profiles, post code, comment, and follow other developers..."
+                              class="input resize-none"
+                              @input="validateDescription()"></textarea>
+                    <div class="flex justify-between mt-2">
+                        <span class="text-sm text-gray-500" x-text="`${wordCount} words (minimum 10)`"></span>
+                        <span class="text-sm" 
+                              :class="wordCount >= 10 ? 'text-green-600' : 'text-red-500'"
+                              x-text="wordCount >= 10 ? '✓ Good!' : 'Need more details'"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Requirements File -->
+            <div x-show="currentStep === 4" class="wizard-step" x-transition>
+                <h2 class="text-2xl font-semibold mb-6">Any existing requirements? 📄</h2>
+                <p class="text-gray-600 mb-8">Upload or paste any existing requirements, specifications, or documentation.</p>
+                
+                <div class="mb-6">
+                    <div class="flex border-b-2 border-gray-200 bg-gray-50 rounded-t-lg p-1">
+                        <button @click="fileInputMode = 'paste'" 
+                                :class="fileInputMode === 'paste' ? 'tab-active' : 'tab-inactive'"
+                                class="tab flex-1 text-center">
+                            📝 Paste Text
+                        </button>
+                        <button @click="fileInputMode = 'upload'" 
+                                :class="fileInputMode === 'upload' ? 'tab-active' : 'tab-inactive'"
+                                class="tab flex-1 text-center">
+                            📁 Upload File
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Paste Mode -->
+                <div x-show="fileInputMode === 'paste'" class="space-y-4">
+                    <textarea x-model="formData.requirementsContent" 
+                              rows="8" 
+                              placeholder="Paste your requirements, specifications, or any relevant documentation here..."
+                              class="input resize-none font-mono text-sm"></textarea>
+                </div>
+
+                <!-- Upload Mode -->
+                <div x-show="fileInputMode === 'upload'" class="space-y-4">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary-400 transition-colors"
+                         @drop.prevent="handleFileDrop($event)"
+                         @dragover.prevent
+                         @dragenter.prevent>
+                        <div class="text-4xl mb-4">📁</div>
+                        <p class="text-lg font-medium mb-2">Drop your .md file here</p>
+                        <p class="text-gray-600 mb-4">or click to browse</p>
+                        <input type="file" 
+                               accept=".md,.txt" 
+                               @change="handleFileSelect($event)"
+                               class="hidden" 
+                               x-ref="fileInput">
+                        <button @click="$refs.fileInput.click()" class="btn-outline">
+                            Choose File
+                        </button>
+                    </div>
+                    <div x-show="uploadedFile" class="text-sm text-gray-600">
+                        <span x-text="`Uploaded: ${uploadedFile?.name}`"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Summary -->
+            <div x-show="currentStep === 5" class="wizard-step" x-transition>
+                <h2 class="text-2xl font-semibold mb-6">Ready to generate your rules? ✨</h2>
+                <p class="text-gray-600 mb-8">Review your inputs and generate your personalized AI coding rules.</p>
+                
+                <div class="space-y-6">
+                    <div class="summary-item">
+                        <h3 class="font-medium text-gray-900">Developer Identity</h3>
+                        <p class="text-gray-600" x-text="formData.devIdentity === 'vibe_coder' ? '🎨 Vibe Coder' : '⚡ Experienced Developer'"></p>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <h3 class="font-medium text-gray-900">Tech Stack</h3>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <template x-for="tech in formData.techStack" :key="tech">
+                                <span class="px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-sm" x-text="tech"></span>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <h3 class="font-medium text-gray-900">App Description</h3>
+                        <p class="text-gray-600" x-text="formData.description.substring(0, 200) + (formData.description.length > 200 ? '...' : '')"></p>
+                    </div>
+                    
+                    <div x-show="formData.requirementsContent" class="summary-item">
+                        <h3 class="font-medium text-gray-900">Requirements File</h3>
+                        <p class="text-gray-600">✓ Additional requirements provided</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div x-show="isGenerating" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" x-transition>
+                <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+                    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                    <h3 class="text-xl font-semibold mb-2">Generating Your Ruleset ✨</h3>
+                    <p class="text-gray-600 mb-4">Our AI is analyzing your project and fetching community best practices...</p>
+                    <div class="text-sm text-gray-500">
+                        <p>• Fetching example rulesets from AI Rule Archive</p>
+                        <p>• Analyzing your tech stack and requirements</p>
+                        <p>• Generating personalized coding rules with OpenAI</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Display -->
+            <div x-show="showResults" class="wizard-step" x-transition>
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-green-600 mb-4">🎉 Your Ruleset is Ready!</h2>
+                    <p class="text-gray-600">Here's your personalized AI-generated coding ruleset based on your project and community best practices.</p>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div>
+                            <div class="text-2xl font-bold text-primary-600" x-text="generatedRuleset?.wordCount || 0"></div>
+                            <div class="text-sm text-gray-600">Words</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-primary-600" x-text="'v' + (generatedRuleset?.version || 1)"></div>
+                            <div class="text-sm text-gray-600">Version</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-primary-600" x-text="generatedRuleset?.techStack?.length || 0"></div>
+                            <div class="text-sm text-gray-600">Technologies</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-primary-600">GPT-4o</div>
+                            <div class="text-sm text-gray-600">AI Model</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border rounded-lg overflow-hidden">
+                    <div class="bg-gray-100 px-4 py-3 border-b flex justify-between items-center">
+                        <h3 class="font-semibold text-gray-900">Generated Ruleset</h3>
+                        <button @click="copyToClipboard()" class="text-sm bg-primary-600 text-white px-3 py-1 rounded hover:bg-primary-700">
+                            📋 Copy
+                        </button>
+                    </div>
+                    <div class="p-6 max-h-96 overflow-y-auto overflow-x-hidden">
+                        <pre class="whitespace-pre-wrap text-sm text-gray-800 leading-relaxed font-sans w-full" style="word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; max-width: 100%;" x-text="generatedRuleset?.content || ''"></pre>
+                    </div>
+                </div>
+
+                <div class="flex justify-center space-x-4 mt-8">
+                    <button @click="startNewProject()" class="btn-secondary">
+                        🔄 Create Another Ruleset
+                    </button>
+                    <button @click="downloadRuleset()" class="btn-primary">
+                        💾 Download Ruleset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+                <button @click="previousStep()" 
+                        x-show="currentStep > 1" 
+                        class="btn-secondary">
+                    ← Previous
+                </button>
+                <div x-show="currentStep === 1"></div>
+                
+                <button @click="nextStep()" 
+                        x-show="currentStep <= totalSteps" 
+                        :disabled="!canProceed() || isGenerating"
+                        :class="(canProceed() && !isGenerating) ? 'btn-primary' : 'btn-secondary opacity-50 cursor-not-allowed'">
+                    <span x-text="isGenerating ? '⏳ Generating...' : (currentStep === totalSteps ? 'Generate Rules ✨' : 'Next →')"></span>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Styles -->
+    <style>
+        .option-card {
+            @apply p-6 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 hover:border-primary-300 hover:shadow-md;
+        }
+        .option-card.selected {
+            @apply border-primary-500 bg-primary-50 shadow-md;
+        }
+        .tech-checkbox {
+            @apply cursor-pointer;
+        }
+        .tech-label {
+            @apply block px-4 py-2 border border-gray-300 rounded-lg text-center transition-all duration-200 hover:border-primary-400;
+        }
+        .tech-checkbox input:checked + .tech-label {
+            @apply bg-primary-600 text-white border-primary-600;
+        }
+        .tab {
+            @apply px-6 py-3 font-medium transition-all duration-200 cursor-pointer border-2 border-transparent rounded-t-lg mr-2;
+        }
+        .tab-active {
+            @apply text-primary-700 bg-white border-primary-200 border-b-white shadow-sm -mb-px z-10 relative;
+        }
+        .tab-inactive {
+            @apply text-gray-600 bg-gray-50 border-gray-200 hover:text-gray-900 hover:bg-gray-100;
+        }
+        .summary-item {
+            @apply p-4 bg-gray-50 rounded-lg;
+        }
+    </style>
+
+    <!-- Alpine.js Wizard Logic -->
+    <script>
+        function wizardApp() {
+            return {
+                currentStep: 1,
+                totalSteps: 5,
+                fileInputMode: 'paste',
+                uploadedFile: null,
+                customTech: '',
+                wordCount: 0,
+                isGenerating: false,
+                showResults: false,
+                generatedRuleset: null,
+                
+                steps: [
+                    'Dev Identity',
+                    'Tech Stack', 
+                    'App Description',
+                    'Requirements',
+                    'Summary'
+                ],
+                
+                formData: {
+                    devIdentity: '',
+                    techStack: [],
+                    description: '',
+                    requirementsContent: ''
+                },
+                
+                // Comprehensive tech stack library from tech-stack-library.md
+                allTechnologies: [
+                    // Programming Languages
+                    'Python', 'JavaScript', 'TypeScript', 'Java', 'C', 'C++', 'C#', 'Go', 'Rust', 'Kotlin', 'Swift', 'Objective-C', 'Ruby', 'PHP', 'Dart', 'Scala', 'Perl', 'R', 'MATLAB', 'Julia', 'Haskell', 'Elixir', 'F#', 'Visual Basic', 'Shell', 'Assembly', 'SQL', 'PL/SQL', 'GraphQL', 'Groovy', 'Lua', 'Erlang', 'Solidity',
+                    // Frontend Frameworks
+                    'React', 'Angular', 'Vue.js', 'Svelte', 'Ember.js', 'Alpine.js', 'Backbone.js', 'Knockout.js', 'Polymer', 'Lit', 'Stencil', 'Preact', 'Solid.js', 'Qwik',
+                    // Backend Frameworks
+                    'Node.js', 'Express.js', 'Django', 'Flask', 'FastAPI', 'Ruby on Rails', 'Laravel', 'Symfony', 'Spring Boot', 'ASP.NET', '.NET Core', 'Gin', 'Echo', 'Fiber', 'Actix', 'Rocket', 'Warp',
+                    // Databases
+                    'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'SQLite', 'MariaDB', 'Oracle', 'SQL Server', 'Cassandra', 'DynamoDB', 'Firebase', 'Supabase', 'PlanetScale', 'CockroachDB',
+                    // Cloud & DevOps
+                    'AWS', 'Google Cloud', 'Azure', 'Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Jenkins', 'GitHub Actions', 'GitLab CI', 'CircleCI', 'Vercel', 'Netlify', 'Heroku',
+                    // Mobile Development
+                    'React Native', 'Flutter', 'Ionic', 'Xamarin', 'Cordova', 'NativeScript', 'Expo',
+                    // Testing
+                    'Jest', 'Mocha', 'Cypress', 'Selenium', 'Playwright', 'Puppeteer', 'Testing Library', 'Vitest', 'Jasmine',
+                    // Build Tools
+                    'Webpack', 'Vite', 'Rollup', 'Parcel', 'esbuild', 'Turbopack', 'Gulp', 'Grunt',
+                    // CSS & Styling
+                    'TailwindCSS', 'Bootstrap', 'Material-UI', 'Chakra UI', 'Ant Design', 'Bulma', 'Foundation', 'Semantic UI', 'Styled Components', 'Emotion', 'SASS', 'LESS'
+                ],
+                
+                // Typeahead state
+                techInput: '',
+                filteredTechs: [],
+                showSuggestions: false,
+                selectedIndex: -1,
+                
+                // Typeahead methods
+                filterTechnologies() {
+                    if (this.techInput.length < 1) {
+                        this.filteredTechs = [];
+                        this.showSuggestions = false;
+                        return;
+                    }
+                    
+                    this.filteredTechs = this.allTechnologies
+                        .filter(tech => 
+                            tech.toLowerCase().includes(this.techInput.toLowerCase()) &&
+                            !this.formData.techStack.includes(tech)
+                        )
+                        .slice(0, 7); // Limit to 7 suggestions to leave room for custom option
+                    
+                    // Add custom option if input doesn't exactly match any existing tech
+                    const exactMatch = this.allTechnologies.some(tech => 
+                        tech.toLowerCase() === this.techInput.toLowerCase()
+                    );
+                    
+                    if (!exactMatch && this.techInput.trim() && !this.formData.techStack.includes(this.techInput.trim())) {
+                        this.filteredTechs.push(`Add "${this.techInput.trim()}" as custom`);
+                    }
+                    
+                    this.showSuggestions = this.filteredTechs.length > 0;
+                    this.selectedIndex = -1;
+                },
+                
+                addTechnology(tech) {
+                    let techToAdd = tech;
+                    
+                    // Handle custom tech entries
+                    if (tech.startsWith('Add "') && tech.endsWith('" as custom')) {
+                        techToAdd = tech.slice(5, -11); // Extract the custom tech name from 'Add "TechName" as custom'
+                    }
+                    
+                    if (!this.formData.techStack.includes(techToAdd)) {
+                        this.formData.techStack.push(techToAdd);
+                    }
+                    this.techInput = '';
+                    this.showSuggestions = false;
+                    this.selectedIndex = -1;
+                },
+                
+                removeTechnology(tech) {
+                    this.formData.techStack = this.formData.techStack.filter(t => t !== tech);
+                },
+                
+                handleTechKeydown(event) {
+                    if (!this.showSuggestions) return;
+                    
+                    switch(event.key) {
+                        case 'ArrowDown':
+                            event.preventDefault();
+                            this.selectedIndex = Math.min(this.selectedIndex + 1, this.filteredTechs.length - 1);
+                            break;
+                        case 'ArrowUp':
+                            event.preventDefault();
+                            this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
+                            break;
+                        case 'Enter':
+                            event.preventDefault();
+                            if (this.selectedIndex >= 0) {
+                                this.addTechnology(this.filteredTechs[this.selectedIndex]);
+                            } else if (this.techInput.trim()) {
+                                this.addTechnology(this.techInput.trim());
+                            }
+                            break;
+                        case 'Escape':
+                            this.showSuggestions = false;
+                            this.selectedIndex = -1;
+                            break;
+                    }
+                },
+                
+                nextStep() {
+                    if (this.canProceed() && this.currentStep < this.totalSteps) {
+                        this.currentStep++;
+                    } else if (this.currentStep === this.totalSteps) {
+                        this.generateRules();
+                    }
+                },
+                
+                previousStep() {
+                    if (this.currentStep > 1) {
+                        this.currentStep--;
+                    }
+                },
+                
+                canProceed() {
+                    switch (this.currentStep) {
+                        case 1:
+                            return this.formData.devIdentity !== '';
+                        case 2:
+                            return this.formData.techStack.length > 0;
+                        case 3:
+                            return this.wordCount >= 10;
+                        case 4:
+                            return true; // Optional step
+                        case 5:
+                            return true;
+                        default:
+                            return false;
+                    }
+                },
+                
+                validateDescription() {
+                    this.wordCount = this.formData.description.trim().split(/\s+/).filter(word => word.length > 0).length;
+                },
+                
+                addCustomTech() {
+                    if (this.customTech.includes(',')) {
+                        const newTechs = this.customTech.split(',').map(tech => tech.trim()).filter(tech => tech.length > 0);
+                        this.formData.techStack = [...new Set([...this.formData.techStack, ...newTechs])];
+                        this.customTech = '';
+                    }
+                },
+                
+                handleFileSelect(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.uploadedFile = file;
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.formData.requirementsContent = e.target.result;
+                        };
+                        reader.readAsText(file);
+                    }
+                },
+                
+                handleFileDrop(event) {
+                    const files = event.dataTransfer.files;
+                    if (files.length > 0) {
+                        this.handleFileSelect({ target: { files } });
+                    }
+                },
+                
+                async generateRules() {
+            try {
+                // Show loading state
+                this.isGenerating = true;
+                const generateButton = document.querySelector('button[x-show="currentStep < totalSteps"]');
+                if (generateButton) {
+                    generateButton.disabled = true;
+                    generateButton.innerHTML = '⏳ Generating Rules...';
+                }
+
+                console.log('Sending form data to backend:', this.formData);
+
+                // Create project via Rails API
+                const projectResponse = await fetch('http://localhost:3000/api/v1/projects', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        project: {
+                            name: `${this.formData.devIdentity === 'vibe_coder' ? 'Vibe' : 'Pro'} Project - ${new Date().toLocaleDateString()}`,
+                            description: this.formData.description,
+                            tech_stack: this.formData.techStack,
+                            dev_identity: this.formData.devIdentity,
+                            requirements_content: this.formData.requirementsContent
+                        }
+                    })
+                });
+
+                if (!projectResponse.ok) {
+                    throw new Error(`Project creation failed: ${projectResponse.status}`);
+                }
+
+                const projectData = await projectResponse.json();
+                console.log('Project created:', projectData);
+
+                // Generate ruleset for the project
+                const rulesetResponse = await fetch(`http://localhost:3000/api/v1/projects/${projectData.id}/generate_ruleset`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!rulesetResponse.ok) {
+                    throw new Error(`Ruleset generation failed: ${rulesetResponse.status}`);
+                }
+
+                const rulesetData = await rulesetResponse.json();
+                console.log('Ruleset generated:', rulesetData);
+
+                // Store the generated ruleset for display
+                this.generatedRuleset = {
+                    content: rulesetData.data.content,
+                    projectId: projectData.id,
+                    version: rulesetData.data.version,
+                    wordCount: rulesetData.data.word_count,
+                    techStack: rulesetData.data.tech_stack,
+                    devIdentity: rulesetData.data.dev_identity
+                };
+
+                // Move to results step
+                this.currentStep = this.totalSteps + 1;
+                this.showResults = true;
+
+            } catch (error) {
+                console.error('Error generating rules:', error);
+                alert(`❌ Error: ${error.message}\n\nPlease check the console for details and ensure the backend server is running on port 3000.`);
+            } finally {
+                // Reset loading state
+                this.isGenerating = false;
+                const generateButton = document.querySelector('button[x-show="currentStep < totalSteps"]');
+                if (generateButton) {
+                    generateButton.disabled = false;
+                    generateButton.innerHTML = '<span x-text="currentStep === totalSteps ? \'Generate Rules ✨\' : \'Next →\'"></span>';
+                }
+            }
+        },
+
+        // Copy ruleset to clipboard
+        async copyToClipboard() {
+            if (!this.generatedRuleset?.content) return;
+            
+            try {
+                await navigator.clipboard.writeText(this.generatedRuleset.content);
+                // Show temporary success feedback
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy to clipboard:', err);
+                alert('Failed to copy to clipboard. Please select and copy the text manually.');
+            }
+        },
+
+        // Download ruleset as a file
+        downloadRuleset() {
+            if (!this.generatedRuleset?.content) return;
+            
+            const content = this.generatedRuleset.content;
+            const filename = `ruleset-v${this.generatedRuleset.version}-${Date.now()}.md`;
+            
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        },
+
+        // Start a new project
+        startNewProject() {
+            // Reset all state
+            this.currentStep = 1;
+            this.showResults = false;
+            this.generatedRuleset = null;
+            this.isGenerating = false;
+            
+            // Reset form data
+            this.formData = {
+                devIdentity: '',
+                techStack: [],
+                description: '',
+                requirementsContent: ''
+            };
+            this.wordCount = 0;
+            this.customTech = '';
+            this.fileInputMode = 'paste';
+            this.uploadedFile = null;
+        }
+    }
+    }
+    </script>
+</body>
+</html>
