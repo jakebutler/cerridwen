@@ -1,8 +1,11 @@
 class Api::V1::ProjectsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_project, only: [:show, :update, :destroy, :generate_ruleset]
+  before_action :check_project_ownership, only: [:show, :update, :destroy, :generate_ruleset]
+  before_action :check_credits, only: [:generate_ruleset]
 
   def index
-    @projects = Project.recent
+    @projects = current_user.projects.recent
     render json: @projects.map { |project| project_json(project) }
   end
 
@@ -11,9 +14,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def create
-    # Use test user for Active Agent testing
-    test_user = User.find_by(email: 'test@example.com')
-    @project = Project.new(project_params.merge(user: test_user))
+    @project = current_user.projects.build(project_params)
     
     if @project.save
       render json: project_json(@project), status: :created
@@ -36,36 +37,51 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def generate_ruleset
-    # Use Active Agent service for real LLM integration
-    service = ActiveAgentRulesService.new(@project)
-    
-    if service.generate_ruleset
-      latest_ruleset = @project.rulesets.order(:version).last
+    begin
+      # Use Active Agent service for real LLM integration
+      service = ActiveAgentRulesService.new(@project, current_user)
       
-      render json: {
-        status: 'success',
-        message: '🎉 AI-powered ruleset generated with OpenAI and community insights!',
-        data: {
-          id: @project.id,
-          ruleset_id: latest_ruleset.id,
-          version: latest_ruleset.version,
-          content: latest_ruleset.content,
-          content_preview: latest_ruleset.content[0..300] + '...',
-          created_at: latest_ruleset.created_at,
-          dev_identity: @project.dev_identity,
-          tech_stack: @project.tech_stack,
-          word_count: latest_ruleset.content.split.length,
-          generator: 'active_agent_openai',
-          model: 'gpt-4o',
-          community_enhanced: true
-        }
-      }, status: :created
-    else
+      if service.generate_ruleset
+        latest_ruleset = current_user.rulesets.where(project: @project).order(:version).last
+        
+        # Deduct credit after successful generation
+        CreditService.deduct_credit(current_user, latest_ruleset)
+        
+        render json: {
+          status: 'success',
+          message: '🎉 AI-powered ruleset generated with OpenAI and community insights!',
+          data: {
+            id: @project.id,
+            ruleset_id: latest_ruleset.id,
+            version: latest_ruleset.version,
+            content: latest_ruleset.content,
+            content_preview: latest_ruleset.content[0..300] + '...',
+            created_at: latest_ruleset.created_at,
+            dev_identity: @project.dev_identity,
+            tech_stack: @project.tech_stack,
+            word_count: latest_ruleset.word_count,
+            tech_stack_count: latest_ruleset.tech_stack_count,
+            tags: latest_ruleset.tag_array,
+            generator: 'active_agent_openai',
+            model: 'gpt-4o',
+            community_enhanced: true,
+            credits_remaining: current_user.credits
+          }
+        }, status: :created
+      else
+        render json: {
+          status: 'error',
+          message: 'Failed to generate AI-powered ruleset',
+          errors: service.errors
+        }, status: :unprocessable_entity
+      end
+    rescue CreditService::InsufficientCreditsError => e
       render json: {
         status: 'error',
-        message: 'Failed to generate AI-powered ruleset',
-        errors: service.errors
-      }, status: :unprocessable_entity
+        message: 'Insufficient credits',
+        error: e.message,
+        credits_remaining: current_user.credits
+      }, status: :payment_required
     end
   end
 
@@ -73,6 +89,23 @@ class Api::V1::ProjectsController < ApplicationController
 
   def set_project
     @project = Project.find(params[:id])
+  end
+
+  def check_project_ownership
+    unless @project.user == current_user
+      render json: { error: 'Unauthorized access to project' }, status: :forbidden
+    end
+  end
+
+  def check_credits
+    unless CreditService.sufficient_credits?(current_user)
+      credit_info = CreditService.credit_check_response(current_user)
+      render json: {
+        status: 'error',
+        message: credit_info[:message],
+        credits_remaining: credit_info[:credits]
+      }, status: :payment_required
+    end
   end
 
   def project_params

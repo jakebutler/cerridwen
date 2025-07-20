@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerridwen - AI Rules Wizard</title>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8" x-data="authApp()" x-init="init()">
+            <!-- Header -->
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-900 mb-2">🧙‍♂️ Cerridwen</h1>
+                <h2 class="text-xl text-gray-600 mb-8">AI-Powered Rules Wizard</h2>
+            </div>
+
+            <!-- Auth Form Container -->
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <!-- Tab Buttons -->
+                <div class="flex bg-gray-100 rounded-lg p-1 mb-6">
+                    <button @click="activeTab = 'signin'" 
+                            :class="activeTab === 'signin' ? 'bg-white shadow-sm' : 'text-gray-600'"
+                            class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all">
+                        Sign In
+                    </button>
+                    <button @click="activeTab = 'signup'" 
+                            :class="activeTab === 'signup' ? 'bg-white shadow-sm' : 'text-gray-600'"
+                            class="flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- Login Form -->
+                <form x-show="activeTab === 'signin'" @submit.prevent="login()" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" x-model="signInData.email" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" x-model="signInData.password" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <button type="submit" :disabled="isLoading"
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <span x-show="!isLoading">Sign In</span>
+                        <span x-show="isLoading">Signing In...</span>
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form x-show="activeTab === 'signup'" @submit.prevent="register()" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" x-model="signUpData.email" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" x-model="signUpData.password" required minlength="6"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                        <input type="password" x-model="signUpData.passwordConfirmation" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div class="text-sm text-gray-600 bg-blue-50 p-3 rounded-md">
+                        🎁 <strong>Welcome bonus:</strong> You'll receive 10 free credits to generate AI-powered rulesets!
+                    </div>
+                    <button type="submit" :disabled="isLoading"
+                            class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <span x-show="!isLoading">Create Account</span>
+                        <span x-show="isLoading">Creating Account...</span>
+                    </button>
+                </form>
+
+                <!-- Error/Success Messages -->
+                <div x-show="error" class="mt-4 p-3 rounded-md border text-sm bg-red-50 text-red-700 border-red-200">
+                    <span x-text="error"></span>
+                </div>
+                <div x-show="success" class="mt-4 p-3 rounded-md border text-sm bg-green-50 text-green-700 border-green-200">
+                    <span x-text="success"></span>
+                </div>
+            </div>
+
+            <!-- Features Preview -->
+            <div class="text-center text-sm text-gray-600">
+                <p class="mb-2">✨ Generate personalized coding rulesets with AI</p>
+                <p class="mb-2">🤖 Powered by OpenAI GPT-4o + Community Best Practices</p>
+                <p>🔒 Secure • 📱 Responsive • 🚀 Fast</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function authApp() {
+            return {
+                activeTab: 'signin',
+                isLoading: false,
+                error: '',
+                success: '',
+                pendingRulesetData: null,
+                
+                signInData: {
+                    email: '',
+                    password: ''
+                },
+                
+                signUpData: {
+                    email: '',
+                    password: '',
+                    passwordConfirmation: ''
+                },
+
+                init() {
+                    // Check URL parameters for signup flow
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('signup') === 'true') {
+                        this.activeTab = 'signup';
+                    }
+                    
+                    // Check for pending ruleset data from wizard
+                    const pendingData = localStorage.getItem('pendingRulesetData');
+                    if (pendingData) {
+                        this.pendingRulesetData = JSON.parse(pendingData);
+                        // Show a message about completing signup to generate ruleset
+                        this.success = 'Complete your signup to generate your custom ruleset!';
+                    }
+                },
+
+                async login() {
+                    this.isLoading = true;
+                    this.error = '';
+                    this.success = '';
+
+                    try {
+                        const response = await fetch('http://localhost:3000/api/v1/users/sign_in', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                user: this.signInData
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            this.success = 'Successfully signed in! Redirecting...';
+                            setTimeout(() => {
+                                window.location.href = '/dashboard/';
+                            }, 1000);
+                        } else {
+                            // Handle different error response formats
+                            if (data.error) {
+                                this.error = data.error;
+                            } else if (data.status && data.status.message) {
+                                this.error = data.status.message;
+                            } else {
+                                this.error = 'Invalid email or password';
+                            }
+                        }
+                    } catch (error) {
+                        this.error = 'Network error. Please try again.';
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+
+                async register() {
+                    this.isLoading = true;
+                    this.error = '';
+                    this.success = '';
+
+                    if (this.signUpData.password !== this.signUpData.passwordConfirmation) {
+                        this.error = 'Passwords do not match';
+                        this.isLoading = false;
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('http://localhost:3000/api/v1/users', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                user: {
+                                    email: this.signUpData.email,
+                                    password: this.signUpData.password,
+                                    password_confirmation: this.signUpData.passwordConfirmation
+                                }
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            if (this.pendingRulesetData) {
+                                // Auto-generate ruleset using stored wizard data
+                                this.success = 'Account created successfully! You received 10 free credits. Generating your ruleset now...';
+                                
+                                // Generate ruleset automatically
+                                setTimeout(async () => {
+                                    try {
+                                        await this.generateRulesetFromPendingData();
+                                    } catch (error) {
+                                        console.error('Error generating ruleset:', error);
+                                        this.error = 'Account created successfully, but there was an error generating your ruleset. Please try again from the wizard.';
+                                        setTimeout(() => {
+                                            window.location.href = '/wizard/';
+                                        }, 3000);
+                                    }
+                                }, 1000);
+                            } else {
+                                // Clear any pending data and redirect to dashboard
+                                localStorage.removeItem('pendingRulesetData');
+                                this.success = 'Account created successfully! You received 10 free credits. Redirecting to dashboard...';
+                                setTimeout(() => {
+                                    window.location.href = '/dashboard/';
+                                }, 1500);
+                            }
+                        } else {
+                            // Handle different error response formats
+                            if (data.status && data.status.message) {
+                                this.error = data.status.message;
+                            } else if (data.errors) {
+                                this.error = Array.isArray(data.errors) ? data.errors.join(', ') : data.errors;
+                            } else {
+                                this.error = 'Registration failed. Please try again.';
+                            }
+                        }
+                    } catch (error) {
+                        this.error = 'Network error. Please try again.';
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+
+                showMessage(text, type) {
+                    if (type === 'error') {
+                        this.error = text;
+                        this.success = '';
+                    } else {
+                        this.success = text;
+                        this.error = '';
+                    }
+                    this.messageType = type;
+                    setTimeout(() => {
+                        this.message = '';
+                    }, 5000);
+                },
+
+                async generateRulesetFromPendingData() {
+                    const wizardData = this.pendingRulesetData;
+                    
+                    // Update success message to show progress
+                    this.success = 'Creating your project...';
+                    
+                    // Step 1: Create project with wizard data
+                    const projectResponse = await fetch('http://localhost:3000/api/v1/projects', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            project: {
+                                dev_identity: wizardData.devIdentity,
+                                tech_stack: wizardData.techStack,
+                                description: wizardData.description,
+                                requirements: wizardData.requirements
+                            }
+                        })
+                    });
+
+                    if (!projectResponse.ok) {
+                        throw new Error('Failed to create project');
+                    }
+
+                    const projectData = await projectResponse.json();
+                    const projectId = projectData.data.id;
+
+                    // Step 2: Generate ruleset
+                    this.success = 'Generating your AI-powered ruleset...';
+                    
+                    const rulesetResponse = await fetch(`http://localhost:3000/api/v1/projects/${projectId}/generate_ruleset`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+
+                    if (!rulesetResponse.ok) {
+                        throw new Error('Failed to generate ruleset');
+                    }
+
+                    const rulesetData = await rulesetResponse.json();
+                    
+                    // Clear the pending data since we've successfully generated the ruleset
+                    localStorage.removeItem('pendingRulesetData');
+                    
+                    // Show success and redirect to results
+                    this.success = 'Ruleset generated successfully! Redirecting to your results...';
+                    
+                    setTimeout(() => {
+                        // Redirect to wizard results page with the generated ruleset
+                        window.location.href = `/wizard/?results=true&projectId=${projectId}&rulesetId=${rulesetData.data.id}`;
+                    }, 2000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

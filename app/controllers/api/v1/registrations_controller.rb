@@ -5,6 +5,10 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
     build_resource(sign_up_params)
 
     if resource.save
+      # Sign in the user automatically after successful registration
+      # Use warden to properly establish the session in API mode
+      warden.set_user(resource, scope: :user)
+      
       render json: {
         status: { code: 200, message: 'Signed up successfully.' },
         data: UserSerializer.new(resource).serializable_hash[:data][:attributes]

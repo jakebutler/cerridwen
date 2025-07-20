@@ -5,6 +5,9 @@
 .env.test.local
 .env.production.local
 
+# Allow .env.example as a template
+!.env.example
+
 # Node modules
 node_modules/
 npm-debug.log*

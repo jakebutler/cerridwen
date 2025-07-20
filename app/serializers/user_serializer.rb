@@ -1,8 +1,4 @@
 class UserSerializer
-  include JSONAPI::Serializer
-  
-  attributes :id, :email, :created_at
-
   def initialize(user)
     @user = user
   end

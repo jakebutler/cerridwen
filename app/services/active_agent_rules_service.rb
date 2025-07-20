@@ -3,8 +3,9 @@
 require 'openai'
 
 class ActiveAgentRulesService
-  def initialize(project)
+  def initialize(project, user = nil)
     @project = project
+    @user = user
     @openai_client = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
     @ai_rule_archive_service = AiRuleArchiveService.new
   end
@@ -298,16 +299,38 @@ class ActiveAgentRulesService
   end
 
   def generate_fallback_ruleset
-    # Fallback content if LLM fails
-    RulesGenerationService.new(@project).send(:generate_ruleset_content)
+    # Fallback content if LLM fails - use the correct service method
+    service = RulesGenerationService.new(@project)
+    if service.generate_ruleset
+      # Get the latest ruleset content that was just created
+      latest_ruleset = @project.rulesets.order(:version).last
+      latest_ruleset&.content || "# Fallback Ruleset\n\nBasic coding guidelines for your project."
+    else
+      "# Fallback Ruleset\n\nBasic coding guidelines for your project."
+    end
   end
 
   def create_ruleset(content)
-    version = (@project.rulesets.maximum(:version) || 0) + 1
+    # Determine version based on user's rulesets for this project
+    version = if @user
+      (@user.rulesets.where(project: @project).maximum(:version) || 0) + 1
+    else
+      (@project.rulesets.maximum(:version) || 0) + 1
+    end
     
-    @project.rulesets.create!(
-      content: content,
-      version: version
-    )
+    # Create ruleset with user association
+    if @user
+      @user.rulesets.create!(
+        content: content,
+        version: version,
+        project: @project
+      )
+    else
+      # Fallback for backward compatibility
+      @project.rulesets.create!(
+        content: content,
+        version: version
+      )
+    end
   end
 end
