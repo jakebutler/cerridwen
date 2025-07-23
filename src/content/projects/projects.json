@@ -1,0 +1,25 @@
+{
+  "cerridwen-rules-wizard": {
+    "id": "cerridwen-rules-wizard",
+    "slug": "cerridwen-rules-wizard",
+    "title": "Cerridwen Rules Wizard",
+    "subtitle": "AI-powered ruleset generator for IDEs",
+    "description": "A Rails and Windsurf application that guides developers through a wizard to generate personalized AI rulesets for IDEs like Cursor, Windsurf, or GitHub Copilot.",
+    "status": "active",
+    "categories": ["AI Tools", "Product Management"],
+    "technologies": ["Ruby on Rails", "Windsurf", "TailwindCSS", "PostgreSQL", "Fly.io", "Active Agent"],
+    "startDate": "2025-07-20",
+    "featured": true,
+    "priority": 1,
+    "image": "/images/projects/cerridwen-hero.jpg",
+    "screenshots": [
+      "/images/projects/cerridwen-screenshot.png"
+    ],
+    "links": {
+      "github": "https://github.com/jakebutler/cerridwen"
+    },
+    "team": ["Solo Project"],
+    "client": "Internal",
+    "tags": ["MVP", "In Development"]
+  }
+}

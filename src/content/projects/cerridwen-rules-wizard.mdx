@@ -1,0 +1,43 @@
+# Cerridwen Rules Wizard
+
+Cerridwen is an AI-powered agent that guides developers through describing their app to generate custom `.md` rulesets for AI-assisted IDEs like Cursor, Windsurf, or GitHub Copilot.
+
+## Problem Statement
+
+As LLM-based development tools become more common, developers need smarter, context-aware rulesets to fine-tune their IDE assistants. However, creating these manually is a tedious and often complex process.
+
+## Solution Approach
+
+Cerridwen Rules Wizard solves this with a sleek, guided experience that uses AI to generate personalized rulesets. The wizard asks a series of questions about the user's app and tech stack, then uses that information to create a custom ruleset.
+
+## Key Features
+
+- **Guided Wizard Flow**: A step-by-step process to understand the user's app and tech stack.
+- **AI-Powered Generation**: Leverages AI to create personalized and effective rulesets.
+- **Project Persistence**: Users can save, revisit, and edit their generated rulesets.
+- **Easy Sharing**: Provides shareable public URLs for generated rulesets.
+- **Multiple Export Options**: Allows users to download `.md` files or copy them to the clipboard.
+
+## Technical Implementation
+
+### Architecture
+- **Frontend**: Windsurf + TailwindCSS
+- **Backend**: Ruby on Rails (API mode)
+- **Authentication**: Devise
+- **AI Agent**: Active Agent
+- **Deployment**: Fly.io
+- **Rules Source**: ai-rules-database
+
+### Code Example
+```ruby
+# Example of a Rails controller action
+def generate_ruleset
+  # Code to interact with the AI agent and generate a ruleset
+end
+```
+
+## Future Roadmap
+
+- **Community Sharing**: Allow users to share and discover ruleset templates.
+- **IDE Integration**: Develop a one-click integration with popular IDEs.
+- **Advanced Analytics**: Implement analytics to track usage and improve the generation process.
